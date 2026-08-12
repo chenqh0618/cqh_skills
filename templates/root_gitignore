@@ -1,0 +1,35 @@
+# ── 原始数据：只读外部数据，绝不入库 ──
+/data/
+
+# ── 分析产物里的大二进制（避免误提交；脚本与 SUMMARY 要入库）──
+*.rds
+*.h5
+*.h5ad
+*.h5seurat
+*.qs
+*.qs2
+*.loom
+*.bam
+*.bai
+*.bw
+*.mtx
+*.mtx.gz
+*.tsv.gz
+*.tbi
+*.npz
+*.pkl
+*.fastq
+*.fastq.gz
+
+# ── 系统 / 编辑器 / 运行时 ──
+.DS_Store
+Thumbs.db
+*~
+.Rhistory
+.RData
+.Rproj.user/
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+.vscode/
+.idea/
