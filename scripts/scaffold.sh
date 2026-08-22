@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # 用法: scaffold.sh <project_dir>
 #
-# 确定性铺「松耦合两侧」骨架：根 CLAUDE.md（指路）+ mgmt/（管理侧）+ analysis/（分析侧）
-# + .claude/agents/{mgr,analyst,reviewer}。
+# 确定性铺「松耦合三侧」骨架：根 CLAUDE.md（指路）+ mgmt/（管理侧）+ analysis/（分析侧，主线）
+# + explore/（探索侧，不进主线）+ .claude/agents/{mgr,analyst,explorer,reviewer}。
 # 背景/数据检索与 PROJECT/RESOURCES/根CLAUDE 回填由 skill 负责（见 SKILL.md 步骤 2/3/5）。
 # 无 --upgrade 模式：已存在任一侧即拒绝，不覆盖。
 set -euo pipefail
@@ -15,8 +15,8 @@ TPL_DIR="$SCRIPT_DIR/../templates"
 [ -w "$PROJ_DIR" ] || { echo "ERROR: 项目目录不可写: $PROJ_DIR" >&2; exit 1; }
 PROJ_DIR="$(cd "$PROJ_DIR" && pwd)"   # 绝对化 = 规范根，写进 CLAUDE.md 与 agent prompt
 
-SIDES=(mgmt analysis)
-AGENTS=(mgr analyst reviewer)
+SIDES=(mgmt analysis explore)
+AGENTS=(mgr analyst explorer reviewer)
 
 # --- 守卫：不覆盖 --------------------------------------------------------------
 for d in "${SIDES[@]}"; do
@@ -33,7 +33,7 @@ cp "$TPL_DIR/root_CLAUDE.md" "$PROJ_DIR/CLAUDE.md"
 [ -e "$PROJ_DIR/AGENTS.md" ] || ln -s CLAUDE.md "$PROJ_DIR/AGENTS.md"
 [ -e "$PROJ_DIR/.gitignore" ] || cp "$TPL_DIR/root_gitignore" "$PROJ_DIR/.gitignore"
 
-# 两侧整目录铺过去
+# 三侧整目录铺过去
 for side in "${SIDES[@]}"; do
   cp -r "$TPL_DIR/$side" "$PROJ_DIR/$side"
 done
@@ -44,7 +44,7 @@ for a in "${AGENTS[@]}"; do
   cp "$TPL_DIR/agents/$a.md" "$PROJ_DIR/.claude/agents/$a.md"
 done
 
-# 规范根占位一次性填掉（根契约 / 两侧契约 / 三个 agent）
+# 规范根占位一次性填掉（根契约 / 三侧契约 / 四个 agent）
 while IFS= read -r f; do
   sed -i "s#<CANONICAL_ROOT>#$PROJ_DIR#g" "$f"
 done < <(grep -rl '<CANONICAL_ROOT>' "$PROJ_DIR/CLAUDE.md" "${SIDES[@]/#/$PROJ_DIR/}" "$PROJ_DIR/.claude/agents" || true)
@@ -56,7 +56,7 @@ if [ ! -d "$PROJ_DIR/.git" ]; then
 fi
 
 # --- 汇报 ---------------------------------------------------------------------
-echo "已生成两侧骨架于: $PROJ_DIR"
+echo "已生成三侧骨架于: $PROJ_DIR"
 {
   echo "CLAUDE.md"; echo "AGENTS.md -> CLAUDE.md"; echo ".gitignore"
   find "$PROJ_DIR/.claude" "${SIDES[@]/#/$PROJ_DIR/}" \( -type f -o -type l \) | sed "s#^$PROJ_DIR/##"
