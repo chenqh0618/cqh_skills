@@ -2,7 +2,8 @@
 # 用法: scaffold.sh <project_dir>
 #
 # 确定性铺「松耦合三侧」骨架：根 CLAUDE.md（指路）+ mgmt/（管理侧）+ analysis/（分析侧，主线）
-# + explore/（探索侧，不进主线）+ .claude/agents/{mgr,analyst,explorer,reviewer}。
+# + explore/（探索侧，不进主线）+ bin/abstracts.sh（跨单元摘要检索）
+# + .claude/agents/{mgr,analyst,explorer,reviewer}。
 # 背景/数据检索与 PROJECT/RESOURCES/根CLAUDE 回填由 skill 负责（见 SKILL.md 步骤 2/3/5）。
 # 无 --upgrade 模式：已存在任一侧即拒绝，不覆盖。
 set -euo pipefail
@@ -38,6 +39,11 @@ for side in "${SIDES[@]}"; do
   cp -r "$TPL_DIR/$side" "$PROJ_DIR/$side"
 done
 
+# 跨单元摘要检索工具（三侧共用，实现只此一份）
+mkdir -p "$PROJ_DIR/bin"
+[ -e "$PROJ_DIR/bin/abstracts.sh" ] || cp "$TPL_DIR/bin/abstracts.sh" "$PROJ_DIR/bin/abstracts.sh"
+chmod +x "$PROJ_DIR/bin/abstracts.sh"
+
 # agents
 mkdir -p "$PROJ_DIR/.claude/agents"
 for a in "${AGENTS[@]}"; do
@@ -58,7 +64,7 @@ fi
 # --- 汇报 ---------------------------------------------------------------------
 echo "已生成三侧骨架于: $PROJ_DIR"
 {
-  echo "CLAUDE.md"; echo "AGENTS.md -> CLAUDE.md"; echo ".gitignore"
+  echo "CLAUDE.md"; echo "AGENTS.md -> CLAUDE.md"; echo ".gitignore"; echo "bin/abstracts.sh"
   find "$PROJ_DIR/.claude" "${SIDES[@]/#/$PROJ_DIR/}" \( -type f -o -type l \) | sed "s#^$PROJ_DIR/##"
 } | sort | sed 's/^/  /'
 echo "git: $GIT_NOTE"

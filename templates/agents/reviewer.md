@@ -21,6 +21,9 @@ model: inherit
 另读 `mgmt/PROJECT.md` §4（推断单位、生物学重复）——统计推断类结论最常见的死法是 pseudoreplication。
 派单点名了某个 `mgmt/plans/*.md` 时，把它当「声称要做什么」的对照，看 as-run 偏离了多少。
 
+**被审折的 `upstream` 或 `as-run` 里点名引用了别的单元时，展开那几个单元的 `SUMMARY.md` 核对**——「结论其实架在一个未复核的 E 上」「引用的数字跟上游对不上」正是要抓的。
+先跑 `bash <CANONICAL_ROOT>/bin/abstracts.sh` 扫两侧摘要定位。**只往被审折引用过的方向延伸，不自由漫游**：无关的 A / E 不翻，审核范围由被审折自己的内容界定。
+
 ## 2. 落点
 
 被审折内的 `review/check_<你自己>_v<n>_<YYYYMMDD>/`——即 `analysis/A<idx>_*/review/…` 或 `explore/E<idx>_*/review/…`（父目录已唯一确定被审对象，束名不必再带 A/E 号）。

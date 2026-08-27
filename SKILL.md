@@ -45,7 +45,7 @@ description: >-
 ## 输入
 
 - `project_dir`（必填）：目标项目文件夹**绝对路径**。用户没给就先问清楚，别猜。
-- 产物：`<project_dir>/` 下根 `CLAUDE.md` + `AGENTS.md` 软链 + `.gitignore` + `.claude/agents/`（四个）+ `mgmt/` + `analysis/` + `explore/`。
+- 产物：`<project_dir>/` 下根 `CLAUDE.md` + `AGENTS.md` 软链 + `.gitignore` + `bin/abstracts.sh` + `.claude/agents/`（四个）+ `mgmt/` + `analysis/` + `explore/`。
 
 ## 总流程
 
@@ -79,7 +79,7 @@ description: >-
     bash "$SKILL_DIR/scripts/scaffold.sh" "<project_dir>"
 
 脚本会：校验目录存在可写；`mgmt/` `analysis/` `explore/` 任一已存在、根 `CLAUDE.md` 非空、或已有同名 agent → **拒绝**（`exit 2`，不覆盖）；
-然后铺根契约（`sed` 填规范根）+ `AGENTS.md` 软链 + `.gitignore`（已有则不覆盖）+ 三侧整目录 + 四个 agent；
+然后铺根契约（`sed` 填规范根）+ `AGENTS.md` 软链 + `.gitignore`（已有则不覆盖）+ 三侧整目录 + `bin/abstracts.sh`（+x）+ 四个 agent；
 无 `.git` 则 `git init`（**不 commit**，留给步骤 7）；打印生成树。
 
 > 本 skill **没有 `--upgrade`**。要把老项目搬成这个布局（含给已有两侧项目补 `explore/`），手工照 `README.md` 的三步做即可，别在这里加分支。
@@ -113,7 +113,7 @@ description: >-
 
 ## 步骤 8：汇报
 
-生成路径树；四个 agent 各一句职责；`PROJECT.md` 留了哪些 `<TODO>`；`RESOURCES.md` 是否发现数据坑；
+生成路径树；四个 agent 各一句职责；`bin/abstracts.sh` 一句用途（扫两侧单元摘要，决定展开谁）；`PROJECT.md` 留了哪些 `<TODO>`；`RESOURCES.md` 是否发现数据坑；
 `PLAN.md` 是搬迁来的还是空骨架（搬迁的话说明剥掉了什么）；下一步（科学问题与任务链由主会话与用户定；
 开第一个 `A` 或 `E` 都需要用户明确指令）。
 
