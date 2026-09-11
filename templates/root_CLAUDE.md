@@ -11,5 +11,4 @@
 **各侧规则彼此独立且各自完整——进哪侧就先读那侧的 `CLAUDE.md`。** 管理与分析两侧只有两条通道：方案靠用户点名进分析侧（不自动流转）；结果靠 `analysis/A*/SUMMARY.md` 回到管理侧。
 `explore/` 默认不回流：E 不进任务表、结论不自动进账本，用户点名才收。
 `data/` 只读，勿用 `find`/`ls -R`/`tree` 递归枚举；要数据清单读 `mgmt/RESOURCES.md`。
-**默认不翻别的分析/探索单元**；每个 `SUMMARY.md` 顶部有 `abstract` + `upstream`，要总览跑 `bin/abstracts.sh`，据此再决定展开谁。
 派活：`mgr`（管理侧）· `analyst`（分析侧，派单须带用户原话）· `explorer`（探索侧，派单须带用户原话）· `reviewer`（仅用户点名审核时）。
