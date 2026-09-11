@@ -1,106 +1,86 @@
 # project-init-loose
 
-一个 Claude Code skill：给科研/数据分析项目铺一套**松耦合三侧**骨架——`mgmt/`（管理）+ `analysis/`（分析，主线）+ `explore/`（探索，旁支），外加四个项目内 subagent。
+用于生物信息学分析项目的 Codex / Claude Code skill。保留相对独立的管理、主线分析和旁支探索，支持分层阅读、简短运行记录及迁移归档。
 
-设计取向是**少仪式、强边界**：没有 `方案 → 执行 → 审核` 的流水线，没有强制闸门；侧与侧之间只有极窄的几条通道，其余靠各侧自己的 `CLAUDE.md` 自足约束。
+## 项目结构
 
-## 铺出来的样子
-
+```text
+project/
+├── CLAUDE.md / AGENTS.md          # 共用规则正文，按当前工作指路
+├── TASKS.md                       # 自动生成的非归档任务索引
+├── .project/
+│   ├── WORKFLOW.md                # A/E 共用工作约定
+│   ├── ARCHIVE.md                 # 归档、恢复、清理时读取
+│   ├── REVIEW.md                  # 正式审核时读取
+│   ├── tasks.py                   # 标准库工具，无数据库、无自动删除
+│   └── templates/                # 唯一一套任务文档模板
+├── .claude/agents/*.md            # mgr / analyst / explorer / reviewer
+├── .codex/agents/*.toml           # 相同职责的 Codex 原生入口
+├── mgmt/
+│   ├── PROJECT.md / RESOURCES.md
+│   ├── PLAN.md / FINDINGS.md
+│   └── plans/ / history/
+├── analysis/A14_cellTypeProportion_0911_codex/
+│   ├── ABSTRACT.md / SUMMARY.md / AS_RUN.md
+│   └── scripts/ / logs/ / results/
+├── explore/E26_markerSensitivity_0911_claude/
+└── _archived/
+    ├── INDEX.md
+    ├── analysis/
+    └── explore/
 ```
-<project>/
-├── CLAUDE.md              # ≤15 行指路（只说去哪读，不定细则）；AGENTS.md 是它的软链
-├── .gitignore             # data/ + 大二进制 + 编辑器垃圾
-├── .claude/agents/        # mgr · analyst · explorer · reviewer
-├── mgmt/                  # 管理侧（轻，只放文档，要能整体读进上下文）
-│   ├── CLAUDE.md          #   本侧规则唯一源
-│   ├── PROJECT.md         #   研究背景 / 科学问题 / 目标 / 实验设计（含推断单位）
-│   ├── RESOURCES.md       #   已有数据：绝对路径 / 规模 / 内容 / 命名键 / 已知坑
-│   ├── PLAN.md            #   任务链 + 三态进度（只挂 A，不挂 E）
-│   ├── FINDINGS.md        #   结论账本，只增不改
-│   └── plans/             #   按需写的方案，无强制模板
-├── analysis/              # 分析侧（重，主线）
-│   ├── CLAUDE.md          #   本侧规则唯一源
-│   ├── _templates/        #   SUMMARY.md · PIPELINE.md
-│   └── A<idx>_<内容>_<MMDD>/   scripts· logs· results· SUMMARY.md· PIPELINE.md
-└── explore/               # 探索侧（重，不进主线）
-    ├── CLAUDE.md          #   本侧规则唯一源
-    ├── _templates/        #   SUMMARY.md · PIPELINE.md
-    └── E<idx>_<内容>_<MMDD>/   同 analysis 规格
-```
 
-## 三侧之间只有这几条通道
+PIPELINE 按教学、汇报或交接需要创建。ABSTRACT 帮助判断相关性；SUMMARY 保存当前有效结论；AS_RUN 给出最终实际方法与复现入口。科学方法变化记录原因和影响，纯样式微调只维护最终代码与产物。
 
-| 方向 | 载体 | 规则 |
-|---|---|---|
-| 方案 → 执行 | **用户的嘴** | 分析/探索侧默认不读 `mgmt/`；用户点名「按 `mgmt/plans/xxx.md` 跑」时才读那一个文件 |
-| 分析结果 → 决策 | **`SUMMARY.md`** | 管理侧只读 `analysis/A*/SUMMARY.md`（五节固定标题），不读脚本与日志 |
-| 探索结果 → 决策 | **默认没有** | `explore/` 不挂任务表、结论不自动进账本；用户点名「把 E0x 记进账本」时才收 |
+## 使用
 
-`analysis/` 与 `explore/` **规格完全一样**（自包含单元、强制 `SUMMARY.md` + `PIPELINE.md`、审核落点同构），差别只在进不进主线。放 `explore/` 的是旁支议题与一次性试探；要让探索结论真正立住，正路是在 `analysis/` 开一个 A 重做。
+需要 Python 3.11+ 和 Git。在 Claude Code 中使用 `/project-init-loose`，在已发现该 skill 的 Codex 中使用 `$project-init-loose`，并说明目标项目。入口见 [SKILL.md](SKILL.md)。
 
-唯一保留的授权门：**新建一个 `A<idx>` / `E<idx>` 必须有用户对它的明确指令**。已开单元内改参数、重跑、补图不需重新授权；只读探查不受限。
-
-## 四个 subagent
-
-| agent | 干什么 |
-|---|---|
-| `mgr` | 管理侧执行者：科学问题 / 数据清单 / PLAN 进度 / FINDINGS 账本 / 写方案。不跑重计算，没有开 A 的权力 |
-| `analyst` | 分析侧执行者：建 A 折、跑计算、落产物、写 SUMMARY 与 PIPELINE。派单须带用户原话 |
-| `explorer` | 探索侧执行者：同上，但只建 E 折、只写 `explore/` |
-| `reviewer` | 独立审核者，**只在用户点名时派**：编排 codex 异模型（沙箱只读）判「结论是否被数据支持」，逐条核对其引用的路径与数字 |
-
-每个 agent 的 prompt 只写职责与指路，规则一律指向对应侧的 `CLAUDE.md`——**规则只有一个源**，避免两处说两套话。
-
-## 与四层版 `project-init` 的区别
-
-| | `project-init`（严） | `project-init-loose`（本仓） |
-|---|---|---|
-| 结构 | `00_project_control` / `01_task_control` / `02_analysis_results` / `03_analysisResults_review` | `mgmt/` + `analysis/` + `explore/` |
-| 流程 | `00 定方向 → 01 定方案 → 02 跑 → 03 审 → 回填 00` | 无流水线 |
-| 方案 | 每个 task 一份详细方案，必写 | 分析/探索侧不写方案文件，`scripts/` 即施工图 |
-| 审核 | 强制闸门（结论进 00 前须审） | 只在用户点名时发生 |
-| 根 `CLAUDE.md` | 规则源（~90 行） | 指路牌（≤15 行），规则在各侧 |
-
-要 00–03 四层、强制闸门、每 task 详细方案，用 `project-init`；要两三套彼此不打扰的系统，用本仓。
-
-## 安装
+可直接验证空目录的脚手架：
 
 ```bash
-git clone https://github.com/chenqh0618/project-init-loose.git ~/.claude/skills/project-init-loose
+bash scripts/scaffold.sh /absolute/path/to/project
 ```
 
-之后在 Claude Code 里说「初始化项目（松）/ 创建 mgmt analysis explore 三侧骨架」，或直接 `/project-init-loose`。
+目录须已存在。脚本创建组织骨架并保留已有仓库，不分析原始数据、不创建科学任务、不自动提交。背景和数据清单由调用 skill 的 agent 依据实际材料回填。
 
-## 用法
+本仓可保留在 `~/.claude/skills/project-init-loose`。在其他宿主使用时，将同一目录链接到该宿主支持的 skills 发现位置，例如 Codex 的 `~/.agents/skills/project-init-loose`；已有同名路径先检查，避免维护多个分叉副本。项目角色分别生成各宿主原生格式，具体是否可调用取决于本机版本和会话工具，不能用根 AGENTS 软链代替角色适配。
 
-skill 需要一个参数：`project_dir`（目标项目文件夹**绝对路径**）。它会
+## 日常任务
 
-1. 检索项目里的**研究背景**与**已有数据**；缺哪样**当场问用户**（不中止、不编）；
-2. 跑 `scripts/scaffold.sh <project_dir>` 确定性铺骨架 + `git init`；
-3. 回填 `mgmt/PROJECT.md`（背景）、`mgmt/RESOURCES.md`（数据）、根 `CLAUDE.md` 的项目名；
-4. 把项目里既有的 PLAN 类文档搬进 `mgmt/PLAN.md`（剥掉指向本布局不存在的文件的引用）；
-5. 首个 `git commit`。
-
-**不会**写 `plans/` 方案、不写 `FINDINGS` 条目、不建任何 `A<idx>` / `E<idx>`。
-
-### 守卫
-
-`scaffold.sh` 在 `mgmt/` `analysis/` `explore/` 任一已存在、根 `CLAUDE.md` 非空、或已有同名 agent 时 **`exit 2` 拒绝，不覆盖**。
-
-## 老项目怎么手工补 `explore/`
-
-本 skill **没有 `--upgrade`**（不想在这里长分支）。已经在用两侧布局的项目，三步补上第三侧：
+以下命令在生成项目根运行：
 
 ```bash
-SKILL=~/.claude/skills/project-init-loose ; PROJ=<项目绝对路径>
-cp -r "$SKILL/templates/explore" "$PROJ/explore"          # 若已有 explore/，改成只补 CLAUDE.md 与 _templates/
-cp "$SKILL/templates/agents/explorer.md" "$PROJ/.claude/agents/explorer.md"
-grep -rl '<CANONICAL_ROOT>' "$PROJ/explore" "$PROJ/.claude/agents/explorer.md" \
-  | xargs sed -i "s#<CANONICAL_ROOT>#$PROJ#g"
+python3 .project/tasks.py new analysis cellTypeProportion --agent codex --question '比较各样本细胞比例'
+python3 .project/tasks.py start A01 --agent claude
+python3 .project/tasks.py finish A01 --status completed
+python3 .project/tasks.py index
 ```
 
-然后手工同步这三处（模板已改好，照抄即可）：根 `CLAUDE.md` 加 `explore/` 行 + 派活行加 `explorer`；`mgmt/CLAUDE.md` 加「`explore/` 默认不回流」一段；`analyst.md` / `mgr.md` / `reviewer.md` 各补一句边界。
+`new` 仅用于用户已授权目标内的任务；角色交接无需逐个转录用户原话。目录后缀记录创建者，首次实际执行者单独记录，后续接手不改名。A/E 编号各自递增，并计入归档任务。
 
-## 许可
+状态命令只记录事实，不启动或监控计算；completed 不表示科学结论成立。ABSTRACT 允许未知历史字段，旧任务状态无法核实时使用 unknown；不能据此直接归档。
 
-个人使用，无附加许可声明。
+## 归档与恢复
+
+```bash
+# 默认预览；实际迁移前检查后台写入与未登记的计算依赖
+python3 .project/tasks.py archive A01 --reason '用户已明确放弃该分析'
+python3 .project/tasks.py archive A01 --reason '用户已明确放弃该分析' --apply --checked
+python3 .project/tasks.py restore A01
+python3 .project/tasks.py restore A01 --apply
+```
+
+迁移保持原名和内容，原路径记录在 ABSTRACT。归档后先恢复原位再继续执行；不默认保留兼容软链。工具拒绝覆盖、编号冲突、已登记的活跃下游依赖和跨文件系统 rename。
+
+`--checked` 表示执行 agent 已核查进程及未登记依赖，不是新增用户审批。索引和声明依赖无法证明全部运行状态。磁盘清理与迁移分开，按用户授权列清单、评估重算代价和保留必要证据；工具不自动删除文件。
+
+已有项目的选择性升级见 [MIGRATION.md](MIGRATION.md)。设计依据与验证范围见 [AUDIT.md](AUDIT.md)。
+
+## 验证
+
+```bash
+python3 -m unittest discover -s tests -v
+```
+
+测试只使用临时小项目，覆盖初始化冲突、两端角色格式、任务身份、索引和归档恢复，不运行组学流程或调用外部模型。

@@ -1,14 +1,15 @@
-# <项目名> — 三侧组织约定（指路，不定细则）
+# <项目名>
 
-> 项目：<一句话项目背景>。背景与数据见 `mgmt/PROJECT.md` / `mgmt/RESOURCES.md`。**规范根**：`<CANONICAL_ROOT>`——绝对路径统一用此前缀，有软链别名时只认规范根。
+> <一句话项目背景>。规范根：`<CANONICAL_ROOT>`。
 
-| 侧 | 放什么 | 开工先读 |
-|---|---|---|
-| `mgmt/` | 科学问题 / 数据清单 / 任务链与进度 / 结论账本 / 方案（轻） | `mgmt/CLAUDE.md` |
-| `analysis/` | 分析单元 `A<idx>_<内容>_<MMDD>`：脚本·日志·结果·SUMMARY（重，主线） | `analysis/CLAUDE.md` |
-| `explore/` | 探索单元 `E<idx>_<内容>_<MMDD>`：同 `analysis/` 规格，但**不进主线** | `explore/CLAUDE.md` |
+| 当前任务 | 先读 |
+|---|---|
+| 背景、数据、实验设计 | `mgmt/PROJECT.md`、`mgmt/RESOURCES.md` 中相关部分 |
+| 规划与结论整理 | `mgmt/CLAUDE.md` |
+| 主线分析 / 旁支探索 | `analysis/CLAUDE.md` / `explore/CLAUDE.md` |
+| 查找已有成果 | `TASKS.md` → 候选任务 `ABSTRACT.md` → 相关文档与产物 |
+| 归档、恢复、清理 | `.project/ARCHIVE.md` |
 
-**各侧规则彼此独立且各自完整——进哪侧就先读那侧的 `CLAUDE.md`。** 管理与分析两侧只有两条通道：方案靠用户点名进分析侧（不自动流转）；结果靠 `analysis/A*/SUMMARY.md` 回到管理侧。
-`explore/` 默认不回流：E 不进任务表、结论不自动进账本，用户点名才收。
-`data/` 只读，勿用 `find`/`ls -R`/`tree` 递归枚举；要数据清单读 `mgmt/RESOURCES.md`。
-派活：`mgr`（管理侧）· `analyst`（分析侧，派单须带用户原话）· `explorer`（探索侧，派单须带用户原话）· `reviewer`（仅用户点名审核时）。
+计划与执行相对独立：已有背景和数据事实可读，计划不自动成为执行指令。授权跟随用户的科学任务。
+`data/` 只读；大型数据先查清单和元数据。`_archived/` 默认不进入日常读取和活跃索引。
+四个角色 `mgr`、`analyst`、`explorer`、`reviewer` 可按需要委派；正式审核按用户请求开展。

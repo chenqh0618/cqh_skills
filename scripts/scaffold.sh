@@ -1,66 +1,133 @@
 #!/usr/bin/env bash
-# 用法: scaffold.sh <project_dir>
-#
-# 确定性铺「松耦合三侧」骨架：根 CLAUDE.md（指路）+ mgmt/（管理侧）+ analysis/（分析侧，主线）
-# + explore/（探索侧，不进主线）+ .claude/agents/{mgr,analyst,explorer,reviewer}。
-# 背景/数据检索与 PROJECT/RESOURCES/根CLAUDE 回填由 skill 负责（见 SKILL.md 步骤 2/3/5）。
-# 无 --upgrade 模式：已存在任一侧即拒绝，不覆盖。
+# Usage: scaffold.sh <existing-project-directory>
 set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+exec python3 - "$SCRIPT_DIR" "$@" <<'PY'
+import json
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+import tempfile
 
-PROJ_DIR="${1:?用法: scaffold.sh <project_dir>}"
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TPL_DIR="$SCRIPT_DIR/../templates"
+def require(ok, message):
+    if not ok:
+        raise ValueError(message)
 
-[ -d "$PROJ_DIR" ] || { echo "ERROR: 项目目录不存在: $PROJ_DIR" >&2; exit 1; }
-[ -w "$PROJ_DIR" ] || { echo "ERROR: 项目目录不可写: $PROJ_DIR" >&2; exit 1; }
-PROJ_DIR="$(cd "$PROJ_DIR" && pwd)"   # 绝对化 = 规范根，写进 CLAUDE.md 与 agent prompt
+def exists(path):
+    return path.exists() or path.is_symlink()
 
-SIDES=(mgmt analysis explore)
-AGENTS=(mgr analyst explorer reviewer)
+try:
+    require(sys.version_info >= (3, 11), "Python 3.11+ is required")
+    require(len(sys.argv) == 3, "Usage: scaffold.sh <existing-project-directory>")
+    scripts = Path(sys.argv[1]).resolve()
+    templates = scripts.parent / "templates"
+    project = Path(sys.argv[2]).resolve()
+    require(project.is_dir() and os.access(project, os.W_OK), f"Not a writable project directory: {project}")
+    require("\n" not in str(project) and "\r" not in str(project) and "`" not in str(project),
+            "Project path cannot contain newlines or Markdown backticks")
+    require(shutil.which("git"), "git is required")
+    roots = ["CLAUDE.md", "AGENTS.md", "mgmt", "analysis", "explore", "_archived", ".project", "TASKS.md"]
+    roles = ["mgr", "analyst", "explorer", "reviewer"]
+    owned = roots + [f".claude/agents/{name}.md" for name in roles] + [f".codex/agents/{name}.toml" for name in roles]
+    conflicts = [name for name in owned if exists(project / name)]
+    require(not conflicts, f"Managed paths already exist; use MIGRATION.md: {', '.join(conflicts)}")
+    for name in [".claude", ".claude/agents", ".codex", ".codex/agents"]:
+        path = project / name
+        require(not exists(path) or path.is_dir() and not path.is_symlink(), f"Invalid or linked parent: {path}")
+        require(not path.exists() or os.access(path, os.W_OK), f"Parent is not writable: {path}")
+    gitignore = project / ".gitignore"
+    require(not gitignore.is_symlink() and (not gitignore.exists() or gitignore.is_file()),
+            "Refusing invalid or linked .gitignore")
+    repo = subprocess.run(["git", "-C", str(project), "rev-parse", "--show-toplevel"],
+                          capture_output=True, text=True)
+    require(repo.returncode == 0 or not exists(project / ".git"), "Existing Git metadata could not be read")
 
-# --- 守卫：不覆盖 --------------------------------------------------------------
-for d in "${SIDES[@]}"; do
-  [ -e "$PROJ_DIR/$d" ] && { echo "ERROR: 已存在，拒绝覆盖: $PROJ_DIR/$d" >&2; exit 2; }
-done
-[ -s "$PROJ_DIR/CLAUDE.md" ] && { echo "ERROR: 根 CLAUDE.md 已存在且非空，拒绝覆盖: $PROJ_DIR/CLAUDE.md" >&2; exit 2; }
-for a in "${AGENTS[@]}"; do
-  [ -s "$PROJ_DIR/.claude/agents/$a.md" ] && { echo "ERROR: 已存在 agent，拒绝覆盖: .claude/agents/$a.md" >&2; exit 2; }
-done
-
-# --- 铺 -----------------------------------------------------------------------
-# 根：指路契约 + AGENTS 软链 + .gitignore（不覆盖已有）
-cp "$TPL_DIR/root_CLAUDE.md" "$PROJ_DIR/CLAUDE.md"
-[ -e "$PROJ_DIR/AGENTS.md" ] || ln -s CLAUDE.md "$PROJ_DIR/AGENTS.md"
-[ -e "$PROJ_DIR/.gitignore" ] || cp "$TPL_DIR/root_gitignore" "$PROJ_DIR/.gitignore"
-
-# 三侧整目录铺过去
-for side in "${SIDES[@]}"; do
-  cp -r "$TPL_DIR/$side" "$PROJ_DIR/$side"
-done
-
-# agents
-mkdir -p "$PROJ_DIR/.claude/agents"
-for a in "${AGENTS[@]}"; do
-  cp "$TPL_DIR/agents/$a.md" "$PROJ_DIR/.claude/agents/$a.md"
-done
-
-# 规范根占位一次性填掉（根契约 / 三侧契约 / 四个 agent）
-while IFS= read -r f; do
-  sed -i "s#<CANONICAL_ROOT>#$PROJ_DIR#g" "$f"
-done < <(grep -rl '<CANONICAL_ROOT>' "$PROJ_DIR/CLAUDE.md" "${SIDES[@]/#/$PROJ_DIR/}" "$PROJ_DIR/.claude/agents" || true)
-
-# git：没有 repo 就 init；不 commit（首个 commit 留给回填之后，见 SKILL.md 步骤 7）
-GIT_NOTE="已有 git repo，未动"
-if [ ! -d "$PROJ_DIR/.git" ]; then
-  git -C "$PROJ_DIR" init -q && GIT_NOTE="已 git init（尚未 commit）"
-fi
-
-# --- 汇报 ---------------------------------------------------------------------
-echo "已生成三侧骨架于: $PROJ_DIR"
-{
-  echo "CLAUDE.md"; echo "AGENTS.md -> CLAUDE.md"; echo ".gitignore"
-  find "$PROJ_DIR/.claude" "${SIDES[@]/#/$PROJ_DIR/}" \( -type f -o -type l \) | sed "s#^$PROJ_DIR/##"
-} | sort | sed 's/^/  /'
-echo "git: $GIT_NOTE"
-echo "已装 subagent: ${AGENTS[*]}（在本项目内 /agents 可见）"
-echo "下一步（由 skill 完成）: 回填 mgmt/PROJECT.md（背景）、mgmt/RESOURCES.md（数据）、根 CLAUDE.md（项目名/一句话背景），然后首个 commit。"
+    # Build and validate a complete skeleton before publishing any managed path.
+    with tempfile.TemporaryDirectory(prefix=".loose-init-", dir=project) as temporary:
+        stage = Path(temporary)
+        (stage / ".project").mkdir()
+        for side in ["mgmt", "analysis", "explore"]:
+            (stage / side).mkdir()
+            source = templates / side
+            for item in source.iterdir():
+                if item.name == "_templates":  # old installed versions may leave empty directories
+                    continue
+                target = stage / side / item.name
+                if item.is_dir():
+                    shutil.copytree(item, target)
+                else:
+                    shutil.copy2(item, target)
+            (stage / side / "AGENTS.md").symlink_to("CLAUDE.md")
+        for name in ["analysis", "explore"]:
+            (stage / "_archived" / name).mkdir(parents=True)
+        shutil.copy2(templates / "archived/CLAUDE.md", stage / "_archived/CLAUDE.md")
+        (stage / "_archived/AGENTS.md").symlink_to("CLAUDE.md")
+        shutil.copy2(templates / "root_CLAUDE.md", stage / "CLAUDE.md")
+        (stage / "AGENTS.md").symlink_to("CLAUDE.md")
+        shutil.copytree(templates / "project", stage / ".project", dirs_exist_ok=True)
+        shutil.copytree(templates / "unit", stage / ".project/templates")
+        shutil.copy2(scripts / "task_tools.py", stage / ".project/tasks.py")
+        shutil.copy2(scripts.parent / "MIGRATION.md", stage / ".project/MIGRATION.md")
+        for name in roles:
+            source = templates / "agents" / f"{name}.md"
+            text = source.read_text()
+            front, body = text.split("---", 2)[1:]
+            fields = dict(line.split(": ", 1) for line in front.strip().splitlines())
+            require(fields["name"] == name, f"Role name mismatch: {source}")
+            claude = stage / ".claude/agents" / f"{name}.md"
+            claude.parent.mkdir(parents=True, exist_ok=True)
+            claude.write_text(text)
+            codex = stage / ".codex/agents" / f"{name}.toml"
+            codex.parent.mkdir(parents=True, exist_ok=True)
+            role = {"name": name, "description": fields["description"], "developer_instructions": body.strip()}
+            codex.write_text("\n".join(f"{key} = {json.dumps(value, ensure_ascii=False)}" for key, value in role.items()) + "\n")
+        for path in stage.rglob("*"):
+            if path.is_file() and not path.is_symlink() and path.suffix in {".md", ".toml"}:
+                path.write_text(path.read_text().replace("<CANONICAL_ROOT>", str(project)))
+        subprocess.run([sys.executable, str(stage / ".project/tasks.py"), "index"], check=True, capture_output=True, text=True)
+        (stage / ".project/tasks.lock").unlink()
+        ignore = gitignore.read_text() if gitignore.exists() else (templates / "root_gitignore").read_text()
+        rules = ["/.project/tasks.lock", "/.loose-init-*/", "/analysis/.new-task-*/", "/explore/.new-task-*/", ".loose-*"]
+        missing = [rule for rule in rules if rule not in ignore.splitlines()]
+        if missing:
+            ignore = ignore.rstrip() + "\n\n# project-init-loose runtime files\n" + "\n".join(missing) + "\n"
+        (stage / ".gitignore").write_text(ignore)
+        if gitignore.exists():
+            (stage / ".gitignore").chmod(gitignore.stat().st_mode & 0o777)
+        if repo.returncode != 0:
+            subprocess.run(["git", "-C", str(stage), "init", "-q"], check=True)
+            owned.append(".git")
+        # All destinations were checked before any write; never merge scientific task trees.
+        published, parents = [], []
+        try:
+            for name in owned:
+                target = project / name
+                require(not exists(target), f"Destination appeared during initialization: {target}")
+                missing_parents = []
+                parent = target.parent
+                while not parent.exists():
+                    missing_parents.append(parent)
+                    parent = parent.parent
+                for parent in reversed(missing_parents):
+                    parent.mkdir()
+                    parents.append(parent)
+                os.rename(stage / name, target)
+                published.append(name)
+            os.replace(stage / ".gitignore", gitignore)
+        except Exception:
+            for name in reversed(published):
+                (stage / name).parent.mkdir(parents=True, exist_ok=True)
+                os.rename(project / name, stage / name)
+            for parent in reversed(parents):
+                parent.rmdir()
+            raise
+    print(f"Initialized project-init-loose: {project}")
+    print("Created mgmt/, analysis/, explore/, _archived/, .project/, TASKS.md and both agent adapters.")
+    print("Next: fill project background and data facts. No scientific tasks or conclusions were created.")
+    print("Git: existing repository preserved." if repo.returncode == 0 else "Git: initialized; no commit created.")
+except (ValueError, OSError, subprocess.CalledProcessError) as error:
+    print(f"ERROR: {error}", file=sys.stderr)
+    sys.exit(2)
+PY
