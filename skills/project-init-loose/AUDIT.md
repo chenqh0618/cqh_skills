@@ -62,3 +62,7 @@ SKILL.md 从 125 行 / 9,286 bytes 减到 33 行 / 3,097 bytes。reviewer 入口
 - [行为测试](tests/test_workflow.py)
 
 本地 Claude 安装源保持在 ~/.claude/skills/project-init-loose；Codex 发现入口 ~/.agents/skills/project-init-loose 链接到同一目录，避免维护两份版本。本轮未发布远端仓库。
+
+## 2026-09-12 维护位置迁移
+
+以上安装位置和发布状态记录的是 2026-09-11 审核时的情况。当前维护源为 `cqh_skills/skills/project-init-loose/`，两个宿主的本地入口均链接到该目录；原独立仓库截至 `37196849d0587def9d2b7e77ab6887df4aed2418` 的 7 次提交完整保留。此次调整维护说明与安装入口，脚本、模板及已有科研项目保持原状。当前入口见[仓库说明](../../README.md)。

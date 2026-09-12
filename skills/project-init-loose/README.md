@@ -48,7 +48,7 @@ bash scripts/scaffold.sh /absolute/path/to/project
 
 目录须已存在。脚本创建组织骨架并保留已有仓库，不分析原始数据、不创建科学任务、不自动提交。背景和数据清单由调用 skill 的 agent 依据实际材料回填。
 
-本仓可保留在 `~/.claude/skills/project-init-loose`。在其他宿主使用时，将同一目录链接到该宿主支持的 skills 发现位置，例如 Codex 的 `~/.agents/skills/project-init-loose`；已有同名路径先检查，避免维护多个分叉副本。项目角色分别生成各宿主原生格式，具体是否可调用取决于本机版本和会话工具，不能用根 AGENTS 软链代替角色适配。
+本 skill 统一维护在 `cqh_skills/skills/project-init-loose/`。`~/.claude/skills/project-init-loose` 与 `~/.agents/skills/project-init-loose` 均链接到该目录；安装与维护入口见[仓库说明](../../README.md)。原独立仓库保留历史，后续修改在 `cqh_skills` 提交。项目角色分别生成各宿主原生格式，具体是否可调用取决于本机版本和会话工具，不能用根 AGENTS 软链代替角色适配。
 
 ## 日常任务
 
