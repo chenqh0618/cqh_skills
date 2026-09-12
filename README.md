@@ -32,6 +32,10 @@ project/
 
 PIPELINE 按教学、汇报或交接需要创建。ABSTRACT 帮助判断相关性；SUMMARY 保存当前有效结论；AS_RUN 给出最终实际方法与复现入口。科学方法变化记录原因和影响，纯样式微调只维护最终代码与产物。
 
+分析与探索的单元根目录保留任务文档，代码、运行日志和有效产物分别放在 `scripts/`、`logs/`、`results/`，这三个目录由任务工具默认创建。`config/`、`work/` 和 `results/` 下的 `figures/`、`tables/`、`objects/` 等子目录按需创建；简单任务无需拆分配置或建立空目录。
+
+任务边界、版本区分和中间文件保留规则统一见 [共同工作约定](templates/project/WORKFLOW.md)，生成后位于 `.project/WORKFLOW.md`。SUMMARY 指明当前有效交付入口；放入 `work/` 不等于允许删除，被下游引用的对象仍需明确保留并记录依赖。
+
 ## 使用
 
 需要 Python 3.11+ 和 Git。在 Claude Code 中使用 `/project-init-loose`，在已发现该 skill 的 Codex 中使用 `$project-init-loose`，并说明目标项目。入口见 [SKILL.md](SKILL.md)。
