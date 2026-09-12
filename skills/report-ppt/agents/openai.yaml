@@ -1,0 +1,6 @@
+interface:
+  display_name: "Report PPT"
+  short_description: "为指定生信分析任务生成含证据来源、图表解读和逐页讲稿的正式 PPTX"
+  default_prompt: "Use $report-ppt to build a formal PPTX with evidence-linked results and speaker notes for the specified analysis task."
+policy:
+  allow_implicit_invocation: false

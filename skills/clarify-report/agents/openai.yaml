@@ -1,0 +1,6 @@
+interface:
+  display_name: "Clarify Report"
+  short_description: "为指定生信分析任务生成可追溯、含图表解读和术语表的通俗报告"
+  default_prompt: "Use $clarify-report to write a plain-language Markdown report grounded in the verified outputs of the specified analysis task."
+policy:
+  allow_implicit_invocation: false
