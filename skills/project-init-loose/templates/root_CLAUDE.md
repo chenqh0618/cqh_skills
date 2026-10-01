@@ -5,6 +5,7 @@
 | 当前任务 | 先读 |
 |---|---|
 | 背景、数据、实验设计 | `mgmt/PROJECT.md`、`mgmt/RESOURCES.md` 中相关部分 |
+| 项目类别、环境与参考库选择 | `mgmt/PROJECT.md`、`mgmt/RESOURCES.md`；按项目领域读取所关联参考库的使用入口 |
 | 规划与结论整理 | `mgmt/CLAUDE.md` |
 | 主线分析 / 旁支探索 | `analysis/CLAUDE.md` / `explore/CLAUDE.md` |
 | 查找已有成果 | `TASKS.md` → 候选任务 `ABSTRACT.md` → 相关文档与产物 |

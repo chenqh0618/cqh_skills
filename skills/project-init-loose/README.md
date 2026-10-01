@@ -88,3 +88,12 @@ python3 -m unittest discover -s tests -v
 ```
 
 测试只使用临时小项目，覆盖初始化冲突、两端角色格式、任务身份、索引和归档恢复，不运行组学流程或调用外部模型。
+
+## 初始化时明确类别与环境
+
+```bash
+bash scripts/scaffold.sh /absolute/project --domain scrna \
+  --project-class complex --env-mode project --reason '长期多阶段分析，需要独立依赖和交付'
+```
+
+四项决策参数需一起提供；不带参数保留旧的待分类骨架行为。`--reference-root` 可覆盖 scRNA_v2 入口。类别与环境方式独立选择；非 scRNA 项目不自动关联 scRNA。脚手架只写入选择并标记 planned，不安装/验证环境，不生成科学结果。后续按 PROJECT/RESOURCES 回填实际证据。

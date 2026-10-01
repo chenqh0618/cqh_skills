@@ -3,6 +3,7 @@
 set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 exec python3 - "$SCRIPT_DIR" "$@" <<'PY'
+import argparse
 import json
 import os
 from pathlib import Path
@@ -20,10 +21,29 @@ def exists(path):
 
 try:
     require(sys.version_info >= (3, 11), "Python 3.11+ is required")
-    require(len(sys.argv) == 3, "Usage: scaffold.sh <existing-project-directory>")
+    parser = argparse.ArgumentParser(description="Initialize a project; optional decisions are recorded, not executed.")
+    parser.add_argument("project")
+    parser.add_argument("--domain")
+    parser.add_argument("--project-class", choices=["lightweight", "complex"])
+    parser.add_argument("--env-mode", choices=["shared", "project"])
+    parser.add_argument("--reason")
+    parser.add_argument("--reference-root")
+    options = parser.parse_args(sys.argv[2:])
+    decisions = [options.domain, options.project_class, options.env_mode, options.reason]
+    require(not any(decisions) or all(decisions),
+            "Provide --domain, --project-class, --env-mode and --reason together, or omit all for an unclassified skeleton.")
+    is_scrna = bool(options.domain and options.domain.lower() in {"scrna", "scrna-seq", "snrna", "snrna-seq"})
+    reference_root = options.reference_root
+    if is_scrna and not reference_root:
+        reference_root = "/public/data/cqh_data/proj_sync/tools_db/scRNA_v2"
+    if reference_root:
+        require(bool(options.domain), "--reference-root requires explicit project decisions")
+        require(Path(reference_root).is_absolute(), "Reference root must be absolute")
+    def md_value(value):
+        return str(value).replace("|", "\\|").replace("\r", " ").replace("\n", " ")
     scripts = Path(sys.argv[1]).resolve()
     templates = scripts.parent / "templates"
-    project = Path(sys.argv[2]).resolve()
+    project = Path(options.project).resolve()
     require(project.is_dir() and os.access(project, os.W_OK), f"Not a writable project directory: {project}")
     require("\n" not in str(project) and "\r" not in str(project) and "`" not in str(project),
             "Project path cannot contain newlines or Markdown backticks")
@@ -86,6 +106,28 @@ try:
         for path in stage.rglob("*"):
             if path.is_file() and not path.is_symlink() and path.suffix in {".md", ".toml"}:
                 path.write_text(path.read_text().replace("<CANONICAL_ROOT>", str(project)))
+        if options.domain:
+            background = stage / "mgmt/PROJECT.md"
+            with background.open("a") as stream:
+                stream.write("\n## 初始化选择\n\n| 项目 | 选择 |\n|---|---|\n")
+                for key, value in [("分析领域", options.domain), ("项目类别", options.project_class),
+                                   ("选择依据", options.reason)]:
+                    stream.write(f"| {key} | {md_value(value)} |\n")
+            resources = stage / "mgmt/RESOURCES.md"
+            with resources.open("a") as stream:
+                stream.write("\n## 环境与参考库选择\n\n")
+                stream.write(f"- 默认环境方式：`{options.env_mode}`\n")
+                stream.write("- 部署状态：planned（仅记录选择；初始化未安装或验证分析环境）。\n")
+                stream.write("- 实际 profile、解释器/prefix、软件版本与验证日期：使用前核对并填写。\n")
+                if reference_root:
+                    ref = Path(reference_root)
+                    version_file = ref / "VERSION"
+                    version = version_file.read_text().strip() if version_file.is_file() else "unknown"
+                    stream.write(f"- 参考库：`{md_value(reference_root)}`；版本：`{md_value(version)}`。\n")
+                    if is_scrna:
+                        stream.write(f"- scRNA 初始化与环境使用说明：`{md_value(str(ref / 'docs/PROJECT_USAGE.md'))}`。\n")
+                        stream.write("- 共享环境缺失或不满足依赖时先准备所选环境；不回退到旧 scRNA 环境。\n")
+                stream.write("- 参考数据：按需登记资源ID、版本、真实路径和校验状态；不自动复制大文件。\n")
         subprocess.run([sys.executable, str(stage / ".project/tasks.py"), "index"], check=True, capture_output=True, text=True)
         (stage / ".project/tasks.lock").unlink()
         ignore = gitignore.read_text() if gitignore.exists() else (templates / "root_gitignore").read_text()

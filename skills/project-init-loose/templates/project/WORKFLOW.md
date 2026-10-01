@@ -23,6 +23,12 @@ python3 .project/tasks.py new explore markerSensitivity --agent claude --questio
 
 开始实际执行时用 `start ID --agent codex`，结束时用 `finish ID --status completed` 或 `failed`；前缀均为 `python3 .project/tasks.py`。状态描述执行进度，completed 不代表科学结论成立。工具不负责启动、监测或终止计算进程。
 
+## 环境与参考库
+
+开始需要软件的任务时，按 `mgmt/RESOURCES.md` 选择已验证的共享环境或项目环境。新增依赖在项目环境处理，不直接补装进共享环境；函数加载不能隐式混入外部 R/Python 包。初始化时的 planned 不代表环境已经可用。
+
+参考代码按任务改编，实际代码、参数和输出保留在本单元。引用资源记录实际版本/路径；大文件可以共享读取。scRNA 的 scope 是单元输出根下的对象分层，OUTPUT_ROOT 指向本单元 results；跨单元输入指定真实路径，不猜“最新文件”。其他领域遵循其实际接口。
+
 ## 数据与代码
 
 - 分析前检查实际输入、样本设计及相关已有结果；按需读背景与数据清单。跨条件推断以独立生物学重复为基础，说明比较对象和推断单位。
