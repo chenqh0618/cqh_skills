@@ -1,6 +1,6 @@
 # 生物医学研究论文解读 Skill
 
-**名称：** `detail_biomed_research_explore`  
+**名称：** `biomedical-paper-detail-reader`  
 **版本：** 1.0.0（2026-09-30）  
 **目标：** 先阐述研究背景、目的和整体框架，再按主图分析证据与逻辑，最终交付独立 HTML。
 
@@ -30,7 +30,7 @@
 ## 目录
 
 ```text
-detail_biomed_research_explore/
+biomedical-paper-detail-reader/
   SKILL.md
   README.md
   CHANGELOG.md

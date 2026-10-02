@@ -1,5 +1,5 @@
 ---
-name: detail_biomed_research_explore
+name: biomedical-paper-detail-reader
 description: >-
   深入解读生物医学原始研究论文，以研究背景、目的和整体框架为起点，按主图及关键补充图重建科学问题、实验设计、直接结果、推论和证据边界，解释图与图之间的逻辑推进，最终生成带可追溯引用的独立 HTML 文件。适用于“论文解读”“逐图精读”“证据链分析”“journal club”等请求；不是只翻译摘要，也不把计算关联写成因果机制。
 metadata:
