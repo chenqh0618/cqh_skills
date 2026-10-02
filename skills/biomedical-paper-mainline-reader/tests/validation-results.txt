@@ -1,0 +1,39 @@
+test_anchor_audit (test_builder.TestBuilder.test_anchor_audit) ... ok
+test_bad_reference_type_rejected (test_builder.TestBuilder.test_bad_reference_type_rejected) ... ok
+test_bad_source_id_rejected (test_builder.TestBuilder.test_bad_source_id_rejected) ... ok
+test_bad_stage_rejected (test_builder.TestBuilder.test_bad_stage_rejected) ... ok
+test_chat_citation_token_rejected (test_builder.TestBuilder.test_chat_citation_token_rejected) ... ok
+test_cited_report (test_builder.TestBuilder.test_cited_report) ... ok
+test_does_not_require_all_figures (test_builder.TestBuilder.test_does_not_require_all_figures) ... ok
+test_duplicate_source_rejected (test_builder.TestBuilder.test_duplicate_source_rejected) ... ok
+test_evidence_locator_required (test_builder.TestBuilder.test_evidence_locator_required) ... ok
+test_html_is_escaped (test_builder.TestBuilder.test_html_is_escaped) ... ok
+test_invalid_date_rejected (test_builder.TestBuilder.test_invalid_date_rejected) ... ok
+test_javascript_link_rejected (test_builder.TestBuilder.test_javascript_link_rejected) ... ok
+test_missing_priority_rejected (test_builder.TestBuilder.test_missing_priority_rejected) ... ok
+test_no_external_runtime (test_builder.TestBuilder.test_no_external_runtime) ... ok
+test_partial_status (test_builder.TestBuilder.test_partial_status) ... ok
+test_source_required (test_builder.TestBuilder.test_source_required) ... ok
+test_template (test_builder.TestBuilder.test_template) ... ok
+test_transfer_trigger_required (test_builder.TestBuilder.test_transfer_trigger_required) ... ok
+test_unknown_citation_rejected (test_builder.TestBuilder.test_unknown_citation_rejected) ... ok
+test_unverified_mainline_rejected (test_builder.TestBuilder.test_unverified_mainline_rejected) ... ok
+test_url_control_character_rejected (test_builder.TestBuilder.test_url_control_character_rejected) ... ok
+test_url_credentials_rejected (test_builder.TestBuilder.test_url_credentials_rejected) ... ok
+test_zero_insights_is_allowed (test_builder.TestBuilder.test_zero_insights_is_allowed) ... ok
+test_zero_insights_requires_reason (test_builder.TestBuilder.test_zero_insights_requires_reason) ... ok
+
+----------------------------------------------------------------------
+Ran 24 tests in 0.012s
+
+OK
+
+Additional validation
+- SKILL.md YAML frontmatter and directory name checked.
+- Chromium offline rendering checked at 1366px and 390px.
+- No external HTTP(S) requests, page errors, missing anchors or horizontal text overflow.
+- Desktop and narrow-screen screenshots visually inspected.
+- Internal source-link navigation tested on a synthetic cited fixture.
+- Print-media navigation hiding checked; actual printed pagination not tested.
+- This environment blocked file:// navigation. Browser tests loaded the identical HTML bytes with set_content while offline; no claim of direct local-file launch testing.
+- Scientific end-to-end evaluation on a real paper was not performed.
