@@ -8,6 +8,7 @@
 | `clarify-report` | 生成通俗易读的 Markdown 报告，包含图表解读、证据链接和术语表。 | [SKILL.md](skills/clarify-report/SKILL.md) |
 | `report-ppt` | 生成正式 PPTX，包含图表解读、逐页讲稿、证据来源和成品检查。 | [SKILL.md](skills/report-ppt/SKILL.md) |
 | `biomedical-paper-detail-reader` | 生物医学原始研究逐图精读，梳理研究框架、证据链和结论边界，交付独立 HTML。 | [SKILL.md](skills/biomedical-paper-detail-reader/SKILL.md) |
+| `biomedical-paper-mainline-reader` | 生物医学论文主线精读，聚焦关键证据，并提炼对肺损伤修复细胞动态与分子机制研究的可迁移启发，交付独立 HTML。 | [SKILL.md](skills/biomedical-paper-mainline-reader/SKILL.md) |
 
 ## 维护与本地入口
 
