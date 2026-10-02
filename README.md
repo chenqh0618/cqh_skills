@@ -7,6 +7,7 @@
 | `project-init-loose` | 初始化松耦合项目工作区，提供任务记录、索引与可恢复归档工具。 | [SKILL.md](skills/project-init-loose/SKILL.md) |
 | `clarify-report` | 生成通俗易读的 Markdown 报告，包含图表解读、证据链接和术语表。 | [SKILL.md](skills/clarify-report/SKILL.md) |
 | `report-ppt` | 生成正式 PPTX，包含图表解读、逐页讲稿、证据来源和成品检查。 | [SKILL.md](skills/report-ppt/SKILL.md) |
+| `detail_biomed_research_explore` | 生物医学原始研究逐图精读，梳理研究框架、证据链和结论边界，交付独立 HTML。 | [SKILL.md](skills/detail_biomed_research_explore/SKILL.md) |
 
 ## 维护与本地入口
 

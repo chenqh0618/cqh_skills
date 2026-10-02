@@ -1,0 +1,31 @@
+test_citation_anchor_generated (test_renderer.RendererTests.test_citation_anchor_generated) ... ok
+test_duplicate_anchor_rejected (test_renderer.RendererTests.test_duplicate_anchor_rejected) ... ok
+test_duplicate_panel_rejected (test_renderer.RendererTests.test_duplicate_panel_rejected) ... ok
+test_external_svg_rejected (test_renderer.RendererTests.test_external_svg_rejected) ... ok
+test_false_complete_rejected (test_renderer.RendererTests.test_false_complete_rejected) ... ok
+test_image_path_traversal_rejected (test_renderer.RendererTests.test_image_path_traversal_rejected) ... ok
+test_mathml_renders (test_renderer.RendererTests.test_mathml_renders) ... ok
+test_missing_anchor_rejected (test_renderer.RendererTests.test_missing_anchor_rejected) ... ok
+test_missing_figure_rejected (test_renderer.RendererTests.test_missing_figure_rejected) ... ok
+test_missing_panel_rejected (test_renderer.RendererTests.test_missing_panel_rejected) ... ok
+test_missing_section_rejected (test_renderer.RendererTests.test_missing_section_rejected) ... ok
+test_passive_svg_embeds (test_renderer.RendererTests.test_passive_svg_embeds) ... ok
+test_script_url_rejected (test_renderer.RendererTests.test_script_url_rejected) ... ok
+test_table_shape_rejected (test_renderer.RendererTests.test_table_shape_rejected) ... ok
+test_template_builds (test_renderer.RendererTests.test_template_builds) ... ok
+test_text_cannot_replace_template_tokens (test_renderer.RendererTests.test_text_cannot_replace_template_tokens) ... ok
+test_text_html_escaped (test_renderer.RendererTests.test_text_html_escaped) ... ok
+test_unknown_citation_rejected (test_renderer.RendererTests.test_unknown_citation_rejected) ... ok
+test_unsafe_mathml_rejected (test_renderer.RendererTests.test_unsafe_mathml_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.017s
+
+OK
+
+Browser check: Chromium, HTML bytes loaded with set_content, offline=True.
+Direct file:// navigation was restricted by the environment; not claimed as tested.
+{"viewport": "desktop", "offline": true, "metrics": {"width": 1440, "scrollWidth": 1440, "figureCount": 2, "mathWidth": 972, "mathHeight": 63.078125, "externalResources": []}, "print": {"sidebar": "none", "heroBg": "rgb(255, 255, 255)"}, "page_errors": []}
+{"viewport": "mobile", "offline": true, "metrics": {"width": 390, "scrollWidth": 390, "figureCount": 2, "mathWidth": 284, "mathHeight": 63.078125, "externalResources": []}, "print": {"sidebar": "none", "heroBg": "rgb(255, 255, 255)"}, "page_errors": []}
+Desktop, main-figure layout, and math rendering screenshots inspected.
+Real-paper end-to-end scientific interpretation: NOT TESTED.
