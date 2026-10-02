@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<title>读懂主线，把启发带回课题</title>
+<style>
+:root{color-scheme:light;--paper:#f7f6f2;--white:#fff;--ink:#183139;--body:#33464c;--muted:#65757a;--teal:#23685f;--line:#dce4df;--wash:#edf4ef;--warm:#f5eddc;--gold:#926323}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{margin:0;background:var(--paper);color:var(--body);font-family:"Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif;font-size:16px;line-height:1.9;overflow-wrap:anywhere}
+a{color:var(--teal);text-decoration-thickness:1px;text-underline-offset:3px}a:focus-visible{outline:3px solid var(--gold);outline-offset:4px}p{margin:.65em 0 1em}.page{max-width:1056px;margin:auto;padding:0 52px}.skip-link{position:absolute;left:12px;top:-80px;padding:8px 16px;background:#fff;z-index:10}.skip-link:focus{top:10px}
+.hero{padding-top:54px;padding-bottom:28px;border-top:7px solid var(--teal)}.kicker{font-size:12px;font-weight:750;letter-spacing:.15em;color:var(--teal);margin:0 0 18px}.hero h1{margin:0;color:var(--ink);font-size:38px;line-height:1.38;letter-spacing:-.02em;font-weight:780}.subtitle{font-size:17px;margin:16px 0 20px;color:var(--muted)}.meta{display:flex;align-items:center;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--muted)}.pill{background:var(--teal);color:#fff;padding:3px 11px;border-radius:5px;font-weight:650}.paper-citation{font-size:13px;line-height:1.7;color:var(--muted);margin-top:16px}.notice{margin-bottom:24px;padding:13px 18px;background:var(--warm);border-left:3px solid #b08a43;font-size:13px;line-height:1.8;color:#68532d}.nav-shell{position:sticky;top:0;z-index:5;background:rgba(247,246,242,.97);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}nav{display:flex;gap:9px;flex-wrap:wrap;padding-top:11px!important;padding-bottom:11px!important}nav a{display:inline-block;color:var(--ink);text-decoration:none;font-size:13px;padding:4px 12px;border-radius:4px}nav a:hover{background:var(--wash)}main{padding-top:6px!important}section{padding:36px 0 8px;scroll-margin-top:85px}.section-heading{display:flex;align-items:center;gap:14px;margin:0 0 23px}.section-number{font-size:12px;line-height:28px;width:30px;text-align:center;background:var(--ink);color:#fff;border-radius:4px;flex-shrink:0}h2{font-size:25px;line-height:1.45;color:var(--ink);margin:0;font-weight:750}h3{font-size:20px;line-height:1.5;color:var(--ink);margin:0 0 14px}.eyebrow{font-size:12px;font-weight:700;letter-spacing:.09em;color:var(--teal)}.thesis{border-left:4px solid var(--teal);padding:19px 25px;background:var(--wash);margin-bottom:24px}.thesis p{font-size:18px;line-height:1.8;font-weight:600;color:var(--ink);margin:9px 0 0}.route{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 8px;counter-reset:route}.route li{flex:1 1 155px;background:#fff;border:1px solid var(--line);border-radius:6px;padding:12px 14px;font-size:13px;line-height:1.65;counter-increment:route}.route li:before{content:counter(route,decimal-leading-zero);display:block;color:var(--teal);font-size:11px;font-weight:700;letter-spacing:.08em;margin-bottom:4px}.evidence-node{padding:25px 28px;background:var(--white);border:1px solid var(--line);border-radius:8px;margin-bottom:18px;scroll-margin-top:90px}.node-title{display:flex;align-items:baseline;gap:13px;margin-bottom:12px}.node-number{font-size:13px;color:var(--teal);font-weight:750}.node-title h3{margin:0}.evidence-node p:last-child{margin-bottom:0}.takeaway{margin-top:16px!important;border-top:1px solid var(--line);padding-top:12px;font-size:14px;color:var(--teal)}.refs{display:inline-flex;gap:5px;padding-left:5px;vertical-align:super;font-size:11px;line-height:1.3}.refs a{text-decoration:none}.locator{display:block;font-size:12px;color:var(--muted);line-height:1.65;margin-top:6px}.research-context{padding:17px 21px;background:var(--wash);border-radius:6px}.research-context p{margin:5px 0 0;font-size:14px}.transfer-note{font-size:12px;color:var(--muted);margin:13px 0 20px}.insight{position:relative;background:#fff;padding:25px 28px;border:1px solid var(--line);border-top:3px solid #7faaa0;border-radius:7px;margin-bottom:18px}.stage{font-size:11px;line-height:1.5;padding:4px 9px;background:var(--wash);color:var(--teal);border-radius:4px;display:inline-block;margin-bottom:13px}.insight h3{margin:0 0 18px}.insight-row{display:grid;grid-template-columns:92px minmax(0,1fr);gap:13px;margin:11px 0}.row-label{color:var(--muted);font-size:12px;padding-top:3px;font-weight:650}.insight-row p{font-size:15px;line-height:1.9;margin:0}.boundary{border-top:1px solid var(--line);padding-top:13px;margin-top:15px}.priority{border:1px solid #c6d9cd;border-left:4px solid var(--teal);background:#eaf2ec;margin-top:30px;padding:24px 29px;border-radius:5px}.priority h2{font-size:22px;margin:8px 0 12px}.priority p{margin-bottom:0}.sources{padding-top:35px;padding-bottom:28px;font-size:12px;color:var(--muted);line-height:1.8}.sources h2{font-size:17px;margin-bottom:13px}.sources ol{padding-left:21px}.sources li{margin:12px 0;scroll-margin-top:90px}.footer{border-top:1px solid var(--line);padding-top:18px!important;padding-bottom:30px!important;font-size:11px;color:var(--muted);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+@media(max-width:700px){.page{padding-left:23px;padding-right:23px}.hero{padding-top:31px;padding-bottom:18px}.hero h1{font-size:28px}.subtitle{font-size:15px}.kicker{font-size:10px}.meta{font-size:11px;gap:7px}.nav-shell{position:static}nav{gap:2px;padding-top:7px!important;padding-bottom:7px!important}nav a{font-size:11px;padding:5px 8px}.notice{font-size:12px;padding:11px 13px}section{padding-top:27px}.section-heading{gap:10px;margin-bottom:18px}h2{font-size:21px}.thesis{padding:16px 18px}.thesis p{font-size:16px}.route{gap:8px}.route li{flex-basis:calc(50% - 8px);font-size:12px}.evidence-node,.insight{padding:21px 18px}.node-title{gap:9px}h3{font-size:18px}body{font-size:15px;line-height:1.9}.insight-row{display:block;margin:14px 0}.row-label{display:block;margin-bottom:5px}.insight-row p{font-size:14px}.priority{padding:19px 20px}.priority h2{font-size:20px}.sources{font-size:11px}}
+@media print{@page{size:A4;margin:17mm 18mm}body{background:#fff;font-size:10.5pt;line-height:1.7;color:#222}.page{max-width:none;padding:0}.hero{padding-top:17px}.hero h1{font-size:25pt}.nav-shell,.skip-link{display:none}.notice{font-size:9pt}.section-heading{break-after:avoid}h2,h3{break-after:avoid}.evidence-node,.insight{break-inside:auto;padding:15px 18px;box-shadow:none}.insight-row{break-inside:avoid}.priority{break-inside:avoid}.route{break-inside:avoid}a{color:inherit}.refs a{text-decoration:none}.footer{font-size:8pt}section{padding-top:22px}p{orphans:3;widows:3}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#question">跳转正文</a>
+<header class="hero page">
+<p class="kicker">PAPER MAINLINE / RESEARCH TRANSFER</p>
+<h1>读懂主线，把启发带回课题</h1>
+<p class="subtitle">精简版：不求逐图完整，重在关键问题、证据转折与研究迁移。</p>
+<div class="meta"><span class="pill">结构演示</span><span>精简版 v1.0.0</span><span>·</span><span>未提供真实论文</span></div>
+<p class="paper-citation">本文件为新版 Skill 的结构与样式预览。尚未指定真实论文。</p>
+</header>
+<div class="page"><div class="notice" role="note">结构与样式演示，不是真实论文解读。下文说明正式报告的取舍与写法；没有虚构实验或发现。</div></div>
+<div class="nav-shell"><nav class="page" aria-label="报告目录"><a href="#question">01 研究问题</a><a href="#mainline">02 关键证据</a><a href="#transfer">03 课题启发</a><a href="#priority">优先关注</a><a href="#sources">来源</a></nav></div>
+<main class="page">
+<section id="question" aria-labelledby="question-title">
+<div class="section-heading"><span class="section-number">01</span><h2 id="question-title">这篇论文究竟在解决什么</h2></div>
+<div class="thesis"><span class="eyebrow">一句话主线</span>
+<p>沿“为什么提出问题—怎样取得关键证据—答案成立到哪里”的路线读懂论文，再判断它能为我的肺损伤修复研究带来什么。</p>
+</div>
+<p>正式报告首先用两三段说明研究背景、尚未解决的关键问题、本文目的，以及作者采用的模型和总体设计。只保留理解后续证据所必需的信息，不扩写成领域综述，也不先列出全部主图。</p>
+<p>随后选出3–5个决定论文主结论的研究节点。同一节点可以整合多幅主图和关键补图；非关键技术细节可以略去，但改变结论的反证、必要对照与重要限制不能因“精简”而消失。</p>
+<ol class="route" aria-label="研究主线">
+<li>找准核心问题</li>
+<li>解释关键证据如何推进</li>
+<li>界定答案的边界</li>
+<li>筛选可迁移的启发</li>
+</ol></section>
+<section id="mainline" aria-labelledby="mainline-title">
+<div class="section-heading"><span class="section-number">02</span><h2 id="mainline-title">沿主线读懂关键证据</h2></div>
+<article class="evidence-node" id="node-1"><div class="node-title"><span class="node-number">01</span><h3>先抓住真正需要解释的问题</h3></div>
+<p>真实解读会先说明：这篇论文最想解决的未知是什么？作者通过什么关键比较、取样或测量，让这个问题变得可以回答？读者应看到“问题与证据为什么相配”，而不只是知道论文用了哪些技术。</p>
+<p>这一节点只展开足以建立后续研究起点的结果。在叙述相应事实时标明原始Figure/子图和必要的方法定位；不为了覆盖率逐一翻译旁支子图。</p>
+<p class="takeaway">节点标题围绕科学问题或关键发现，而不是“Figure 1”。</p>
+</article>
+<article class="evidence-node" id="node-2"><div class="node-title"><span class="node-number">02</span><h3>再讲清楚哪个证据改变了原来的解释</h3></div>
+<p>接下来说明前一步留下了什么问题，以及为什么需要新的分析或实验。关键不在于“下一幅图做了什么”，而在于这项证据让哪些解释更可信、哪些解释仍不能排除。若几组证据是并行验证，就说明它们分别补足哪一部分，不强写成线性因果链。</p>
+<p>结果与解释放在连贯段落里：数据直接显示什么，作者怎样理解它，本报告认为结论应止于哪里。通常只突出最重要的一项边界，不重复通用的“样本量有限、还需验证”。</p>
+<p class="takeaway">方法只讲到足以理解关键比较和推论，不堆软件名称或参数。</p>
+</article>
+<article class="evidence-node" id="node-3"><div class="node-title"><span class="node-number">03</span><h3>最后说明研究真正推进了什么，又停在哪里</h3></div>
+<p>用末尾的关键节点收束全文：这篇论文最稳妥的答案是什么？它是建立了资源、发现了现象、验证了一项解释，还是提供了特定条件下的功能证据？按照论文自己的研究目标评价贡献，不强迫每篇图谱或方法论文都形成机制闭环。</p>
+<p>将最影响后续研究的未解问题保留下来，作为进入“我的课题能借鉴什么”的起点。这里不是再写一遍摘要，也不是追加一份完整审稿清单。</p>
+<p class="takeaway">读者最终应能说清论文的逻辑，而不是背出所有实验。</p>
+</article>
+</section>
+<section id="transfer" aria-labelledby="transfer-title">
+<div class="section-heading"><span class="section-number">03</span><h2 id="transfer-title">对我的肺损伤修复研究有什么用</h2></div>
+<div class="research-context"><span class="eyebrow">课题视角</span>
+<p>默认关注肺损伤修复的细胞动态和分子机制。结合当前具体模型、样本和数据选择启发；不把所有论文都套成同一种细胞转变，也不把讨论过的技术默认当成已经具备的实验条件。</p></div>
+<p class="transfer-note">本节是面向用户课题的研究推演；不等于原论文已在肺损伤修复中完成验证。</p>
+<article class="insight" id="insight-1">
+<span class="stage">现有数据可初步评估</span>
+<h3>把论文中的问题，转成我课题里的一个可区分问题</h3>
+<div class="insight-row"><span class="row-label">本文触发点</span>
+<p>正式报告从本文一个明确的概念区分、关键发现或分析对比出发，注明相应证据；不是凭空追加一个看似相关的热门方向。</p>
+</div>
+<div class="insight-row"><span class="row-label">如何迁移</span>
+<p>说明它能转成用户研究里的哪一个具体问题：要比较什么样本或状态，哪些不同解释值得区分，怎样利用已有数据作初步判断。不会停在“可进一步做单细胞分析”。</p>
+</div>
+<div class="insight-row boundary"><span class="row-label">价值与边界</span>
+<p>这个状态标签只是栏目示例，真正是否可执行要看论文与用户现有数据。还要说清初步结果会怎样改变理解，以及仍然不能回答什么。</p>
+</div></article>
+<article class="insight" id="insight-2">
+<span class="stage">需补充实验/数据</span>
+<h3>借鉴真正有区分力的设计，而不是照搬整套实验</h3>
+<div class="insight-row"><span class="row-label">本文触发点</span>
+<p>从论文某个关键对照、取样窗口、干预与读出的组合中，提炼它为什么能排除一个竞争解释。</p>
+</div>
+<div class="insight-row"><span class="row-label">如何迁移</span>
+<p>换成用户课题中相应的模型、比较和读出，指出其中最值得保留的设计逻辑；只提出与当前问题有关的验证，不默认需要复刻论文的全部实验。</p>
+</div>
+<div class="insight-row boundary"><span class="row-label">价值与边界</span>
+<p>明确需要新增什么资源，以及跨物种、组织或急慢性模型迁移时哪些前提尚未成立。建议属于课题推演，不是原文已经完成的肺修复验证。</p>
+</div></article>
+<article class="insight" id="insight-3">
+<span class="stage">长期关注</span>
+<h3>也允许带走方法、资源、负结果或一条避坑经验</h3>
+<div class="insight-row"><span class="row-label">本文触发点</span>
+<p>启发不必都是候选基因或大科学问题，也可以来自本文的分析策略、数据资源、证据组合或未能支持的假说。</p>
+</div>
+<div class="insight-row"><span class="row-label">如何迁移</span>
+<p>指出它能帮助解决用户课题的哪项具体困难，为什么比泛泛的方法清单更值得关注。有时最有价值的启发，是避免把一种观察直接写成过强结论。</p>
+</div>
+<div class="insight-row boundary"><span class="row-label">价值与边界</span>
+<p>正式报告只保留真正有迁移价值的内容。没有足够依据时少写，甚至明确说明没有可靠可迁移之处，不为满足数量而凑建议。</p>
+</div></article>
+</section>
+<section class="priority" id="priority">
+<span class="eyebrow">最值得带走的一个点</span>
+<h2>最后只留下一个最值得优先带走的点</h2>
+<p>正式报告会在科学意义、现有资源与判断价值之间做取舍，用一小段说明最值得先关注的问题或动作，以及为什么是它。默认正文约2,000–3,500个中文字；目标是读完后能讲清研究主线，并知道对自己的课题最有用的是什么。</p>
+</section>
+<section class="sources" id="sources"><h2>来源与材料范围</h2>
+<p>仅演示报告结构和写法，没有读取或解读具体论文。正式报告会显示真实论文版本、关键图像核验情况与材料缺口；不会因省略非关键图就把必要材料的缺失掩盖掉。</p>
+<p>尚未提供真实论文。本演示不包含文献结论，也不提供虚构文献或图号。</p>
+</section>
+</main>
+<footer class="page footer"><span>生物医学论文主线精读 · 肺损伤修复研究启发</span><span>生成日期 2026-10-03 · 单文件离线阅读</span></footer>
+</body>
+</html>
