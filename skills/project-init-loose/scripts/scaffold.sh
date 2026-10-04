@@ -113,8 +113,8 @@ try:
                 for key, value in [("分析领域", options.domain), ("项目类别", options.project_class),
                                    ("选择依据", options.reason)]:
                     stream.write(f"| {key} | {md_value(value)} |\n")
-            usage = stage / ".project/environments/USAGE.md"
-            with usage.open("a") as stream:
+            dependencies = stage / ".project/DEPENDENCIES.md"
+            with dependencies.open("a") as stream:
                 stream.write("\n## 初始化选择\n\n")
                 stream.write(f"- 默认环境方式：`{options.env_mode}`\n")
                 stream.write("- 部署状态：planned（仅记录选择；初始化未安装或验证分析环境）。\n")

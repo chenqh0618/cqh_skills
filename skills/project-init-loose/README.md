@@ -12,7 +12,7 @@ project/
 │   ├── WORKFLOW.md                # A/E 共用工作约定
 │   ├── ARCHIVE.md                 # 归档、恢复、清理时读取
 │   ├── REVIEW.md                  # 正式审核时读取
-│   ├── environments/USAGE.md       # 环境与参考代码库的日常入口
+│   ├── DEPENDENCIES.md             # 参考数据、工具与环境的日常入口
 │   ├── tasks.py                   # 标准库工具，无数据库、无自动删除
 │   └── templates/                # 唯一一套任务文档模板
 ├── .claude/agents/*.md            # mgr / analyst / explorer / reviewer
@@ -99,4 +99,4 @@ bash scripts/scaffold.sh /absolute/project --domain scrna \
 
 四项决策参数需一起提供；不带参数保留旧的待分类骨架行为。`--reference-root` 可覆盖 scRNA_v2 入口。类别与环境方式独立选择；非 scRNA 项目不自动关联 scRNA。脚手架只写入选择并标记 planned，不安装/验证环境，不生成科学结果。
 
-`mgmt/PROJECT.md` 保存类别与选择依据；`mgmt/RESOURCES.md` 保存数据与参考数据；`.project/environments/USAGE.md` 保存环境方式、参考代码库和“任务用途 → 环境 → 启动命令”表，由根和分析/探索侧 CLAUDE 指向。安装、锁定和验证详情按需链接，实际运行来源保存在任务 AS_RUN。环境复用和方法选择遵循共同工作约定：已有验证适用时直接复用，可以在授权范围内采用更适合的库外方法。
+`mgmt/PROJECT.md` 保存类别与选择依据；`mgmt/RESOURCES.md` 保存研究样本、观测及衍生产物；`.project/DEPENDENCIES.md` 统一登记参考数据、工具代码、环境及“任务用途 → 环境 → 启动命令”表，由根和分析/探索侧 CLAUDE 指向。分类按执行用途，管理侧维护研究数据事实，执行侧选用和记录依赖。来源、下载校验、部署、锁定和验证详情按需链接，任务 AS_RUN 分别记录实际使用的研究数据与依赖。已有验证适用时直接复用，可以在授权范围内采用更适合的库外方法。
