@@ -20,10 +20,14 @@ class InitializationChoicesTest(unittest.TestCase):
                 self.assertEqual(result.returncode, 0, result.stderr)
                 background = (project / "mgmt/PROJECT.md").read_text()
                 resources = (project / "mgmt/RESOURCES.md").read_text()
+                usage = (project / ".project/environments/USAGE.md").read_text()
                 self.assertIn(project_class, background)
-                self.assertIn(f"`{mode}`", resources)
-                self.assertIn("scRNA_v2", resources)
-                self.assertIn("planned", resources)
+                self.assertIn(f"`{mode}`", usage)
+                self.assertIn("scRNA_v2", usage)
+                self.assertIn("planned", usage)
+                self.assertNotIn("scRNA_v2", resources)
+                self.assertNotIn("USAGE.md", resources)
+                self.assertNotIn(f"`{mode}`", resources)
                 self.assertFalse((project / "envs").exists())
                 self.assertEqual(list((project / "analysis").glob("A*_*")), [])
 
@@ -34,6 +38,7 @@ class InitializationChoicesTest(unittest.TestCase):
                                    "--env-mode", "project", "--reason", "独立多组学项目")
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertNotIn("scRNA_v2", (project / "mgmt/RESOURCES.md").read_text())
+            self.assertNotIn("scRNA_v2", (project / ".project/environments/USAGE.md").read_text())
 
     def test_incomplete_choices_fail_before_any_writes(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -51,7 +56,34 @@ class InitializationChoicesTest(unittest.TestCase):
                                    "--env-mode", "shared", "--reason", "用户明确选用固定共享环境",
                                    "--reference-root", str(ref))
             self.assertEqual(result.returncode, 0, result.stderr)
-            resources = (project / "mgmt/RESOURCES.md").read_text()
-            self.assertIn(str(ref), resources)
-            self.assertIn("9.1", resources)
-            self.assertIn("`shared`", resources)
+            usage = (project / ".project/environments/USAGE.md").read_text()
+            self.assertIn(str(ref), usage)
+            self.assertIn("9.1", usage)
+            self.assertIn("`shared`", usage)
+            self.assertNotIn(str(ref), (project / "mgmt/RESOURCES.md").read_text())
+
+    def test_unclassified_skeleton_has_usage_without_fabricated_choices(self):
+        with tempfile.TemporaryDirectory() as temp:
+            project = Path(temp)
+            result = self.scaffold(project)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            usage = (project / ".project/environments/USAGE.md").read_text()
+            self.assertNotIn("默认环境方式", usage)
+            self.assertNotIn("scRNA_v2", usage)
+            self.assertFalse((project / "envs").exists())
+
+    def test_generated_environment_entry_links_resolve(self):
+        import re
+
+        with tempfile.TemporaryDirectory() as temp:
+            project = Path(temp)
+            result = self.scaffold(project)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            usage = project / ".project/environments/USAGE.md"
+            for name in ("CLAUDE.md", "analysis/CLAUDE.md", "explore/CLAUDE.md", ".project/WORKFLOW.md"):
+                source = project / name
+                targets = re.findall(r'\[[^\]]+\]\(([^)]+)\)', source.read_text())
+                environment_entries = [target for target in targets if "environments/USAGE.md" in target]
+                self.assertTrue(environment_entries, name)
+                for target in environment_entries:
+                    self.assertEqual((source.parent / target).resolve(), usage.resolve())

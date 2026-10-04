@@ -113,9 +113,9 @@ try:
                 for key, value in [("分析领域", options.domain), ("项目类别", options.project_class),
                                    ("选择依据", options.reason)]:
                     stream.write(f"| {key} | {md_value(value)} |\n")
-            resources = stage / "mgmt/RESOURCES.md"
-            with resources.open("a") as stream:
-                stream.write("\n## 环境与参考库选择\n\n")
+            usage = stage / ".project/environments/USAGE.md"
+            with usage.open("a") as stream:
+                stream.write("\n## 初始化选择\n\n")
                 stream.write(f"- 默认环境方式：`{options.env_mode}`\n")
                 stream.write("- 部署状态：planned（仅记录选择；初始化未安装或验证分析环境）。\n")
                 stream.write("- 实际 profile、解释器/prefix、软件版本与验证日期：使用前核对并填写。\n")
@@ -123,11 +123,11 @@ try:
                     ref = Path(reference_root)
                     version_file = ref / "VERSION"
                     version = version_file.read_text().strip() if version_file.is_file() else "unknown"
-                    stream.write(f"- 参考库：`{md_value(reference_root)}`；版本：`{md_value(version)}`。\n")
+                    stream.write(f"- 参考代码库：`{md_value(reference_root)}`；版本：`{md_value(version)}`。\n")
                     if is_scrna:
-                        stream.write(f"- scRNA 初始化与环境使用说明：`{md_value(str(ref / 'docs/PROJECT_USAGE.md'))}`。\n")
+                        stream.write(f"- scRNA 初始化与调用接口：`{md_value(str(ref / 'docs/PROJECT_USAGE.md'))}`。\n")
+                        stream.write("- 采用该库的 R 模板时使用 SCRNA_PARAMS 指定本单元配置；ORG 按实际物种填写，OUTPUT_ROOT 指向本单元 results，跨单元输入显式指定。\n")
                         stream.write("- 共享环境缺失或不满足依赖时先准备所选环境；不回退到旧 scRNA 环境。\n")
-                stream.write("- 参考数据：按需登记资源ID、版本、真实路径和校验状态；不自动复制大文件。\n")
         subprocess.run([sys.executable, str(stage / ".project/tasks.py"), "index"], check=True, capture_output=True, text=True)
         (stage / ".project/tasks.lock").unlink()
         ignore = gitignore.read_text() if gitignore.exists() else (templates / "root_gitignore").read_text()
