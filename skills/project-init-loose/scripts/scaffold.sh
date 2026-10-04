@@ -131,10 +131,10 @@ try:
         subprocess.run([sys.executable, str(stage / ".project/tasks.py"), "index"], check=True, capture_output=True, text=True)
         (stage / ".project/tasks.lock").unlink()
         ignore = gitignore.read_text() if gitignore.exists() else (templates / "root_gitignore").read_text()
-        rules = ["/.project/tasks.lock", "/.loose-init-*/", "/analysis/.new-task-*/", "/explore/.new-task-*/", ".loose-*"]
+        rules = ["/resources_ref/", "/.project/tasks.lock", "/.loose-init-*/", "/analysis/.new-task-*/", "/explore/.new-task-*/", ".loose-*"]
         missing = [rule for rule in rules if rule not in ignore.splitlines()]
         if missing:
-            ignore = ignore.rstrip() + "\n\n# project-init-loose runtime files\n" + "\n".join(missing) + "\n"
+            ignore = ignore.rstrip() + "\n\n# project-init-loose local data and runtime files\n" + "\n".join(missing) + "\n"
         (stage / ".gitignore").write_text(ignore)
         if gitignore.exists():
             (stage / ".gitignore").chmod(gitignore.stat().st_mode & 0o777)

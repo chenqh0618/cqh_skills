@@ -73,6 +73,36 @@ class InitializationChoicesTest(unittest.TestCase):
             self.assertNotIn("scRNA_v2", dependencies)
             self.assertFalse((project / "envs").exists())
             self.assertFalse((project / ".project/environments/USAGE.md").exists())
+            self.assertFalse((project / "resources_ref").exists())
+
+    def test_reference_files_and_links_are_ignored_but_metadata_is_trackable(self):
+        for existing_ignore in (False, True):
+            with self.subTest(existing_ignore=existing_ignore), tempfile.TemporaryDirectory() as temp:
+                project = Path(temp) / "project"
+                project.mkdir()
+                if existing_ignore:
+                    (project / ".gitignore").write_text("# user rule\ncustom.tmp\n")
+                result = self.scaffold(project)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertFalse((project / "resources_ref").exists())
+                reference = project / "resources_ref/scenic/test.feather"
+                reference.parent.mkdir(parents=True)
+                reference.write_bytes(b"reference fixture")
+                shared = Path(temp) / "shared-index"
+                shared.mkdir()
+                (shared / "source.txt").write_text("unchanged")
+                alias = project / "resources_ref/genome/custom-index"
+                alias.parent.mkdir()
+                alias.symlink_to(shared, target_is_directory=True)
+                metadata = project / ".project/reference-manifest.json"
+                metadata.write_text("{}\n")
+                for path, expected in ((reference, 0), (alias, 0), (metadata, 1)):
+                    check = subprocess.run(["git", "check-ignore", "--quiet", str(path)],
+                                           cwd=project, capture_output=True, text=True)
+                    self.assertEqual(check.returncode, expected, check.stderr)
+                self.assertEqual((shared / "source.txt").read_text(), "unchanged")
+                if existing_ignore:
+                    self.assertTrue((project / ".gitignore").read_text().startswith("# user rule\ncustom.tmp\n"))
 
     def test_generated_dependency_entry_links_resolve(self):
         with tempfile.TemporaryDirectory() as temp:
