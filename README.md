@@ -9,7 +9,6 @@
 | `report-ppt` | 生成正式 PPTX，包含图表解读、逐页讲稿、证据来源和成品检查。 | [SKILL.md](skills/report-ppt/SKILL.md) |
 | `biomedical-paper-detail-reader` | 生物医学原始研究逐图精读，梳理研究框架、证据链和结论边界，交付独立 HTML。 | [SKILL.md](skills/biomedical-paper-detail-reader/SKILL.md) |
 | `biomedical-paper-mainline-reader` | 生物医学论文主线精读，聚焦关键证据，并提炼对肺损伤修复细胞动态与分子机制研究的可迁移启发，交付独立 HTML。 | [SKILL.md](skills/biomedical-paper-mainline-reader/SKILL.md) |
-| `biomedical-paper-story-reader` | 用故事线串联关键科学问题与主图证据，保留对照、负结果和结论边界，交付独立 HTML。 | [SKILL.md](skills/biomedical-paper-story-reader/SKILL.md) |
 | `biomedical-paper-story-reader-beginner` | 面向生物医学初学者，在故事线中补足背景、术语、实验读出和对照原理，加入概念框及读图路线，交付离线单文件 HTML。 | [SKILL.md](skills/biomedical-paper-story-reader-beginner/SKILL.md) |
 | `codex-statusline` | 配置 Codex CLI 原生状态栏，支持字段选择、实用预设、预览与配置备份。 | [SKILL.md](skills/codex-statusline/SKILL.md) |
 | `claude-statusline` | 生成并安装 Claude Code 状态栏，支持列选择、主题及上下文和推理强度颜色提示。 | [SKILL.md](skills/claude-statusline/SKILL.md) |
@@ -18,10 +17,9 @@
 
 - `biomedical-paper-detail-reader`：逐主图及关键补图精读，适合系统核查证据链。
 - `biomedical-paper-mainline-reader`：围绕核心问题精读，并固定提炼对肺损伤修复课题的迁移启发。
-- `biomedical-paper-story-reader`：面向已有一定背景的读者，沿问题、证据与结论讲述研究如何推进。
 - `biomedical-paper-story-reader-beginner`：独立的入门故事版，在需要时解释背景、术语、实验测什么、为什么需要对照，以及关键原图怎么看；保持对负结果和结论范围的核查。
 
-mainline 与 story 有共同的主线叙事思路，但名称、指令和资源独立，不能把 mainline 当作原 story 的替代品。本次将现有 story 的完整源码与资源原样补入仓库，再单独维护 beginner 版本；两个版本均可单独复制使用，不依赖其他论文解读目录。原有 detail 和 mainline 内容保持不变。
+仓库的故事解读技能保留 `biomedical-paper-story-reader-beginner`，可单独复制使用，所需资源均在其目录中。mainline 侧重关键证据与肺损伤修复课题的迁移启发；beginner 侧重面向初学者的背景、术语、实验原理和读图教学。
 
 初学者版包含 `assets/report_template.html`、`references/teaching-example.md` 和 `references/experiment-guide.md`。模板提供概念讲解框、读图提示、证据锚点及可折叠术语区；参考资料帮助解释测量、对照和证据边界，教学例子不得当作论文事实。每个报告仍须按实际论文重建通常 3–5 个关键节点，生成可独立离线阅读的 HTML。
 
@@ -34,7 +32,7 @@ mainline 与 story 有共同的主线叙事思路，但名称、指令和资源�
 ```bash
 skill_repo="/absolute/path/to/cqh_skills"
 mkdir -p "$HOME/.agents/skills" "$HOME/.claude/skills"
-for name in project-init-loose clarify-report report-ppt biomedical-paper-detail-reader biomedical-paper-mainline-reader biomedical-paper-story-reader biomedical-paper-story-reader-beginner; do
+for name in project-init-loose clarify-report report-ppt biomedical-paper-detail-reader biomedical-paper-mainline-reader biomedical-paper-story-reader-beginner; do
     ln -sT "$skill_repo/skills/$name" "$HOME/.agents/skills/$name"
 done
 ln -sT "$skill_repo/skills/project-init-loose" "$HOME/.claude/skills/project-init-loose"
@@ -57,7 +55,6 @@ $project-init-loose 为指定项目初始化 mgmt/analysis/explore 工作区。
 $clarify-report 根据指定分析任务的结果目录生成中文 Markdown 报告，面向非本领域读者。
 $report-ppt 根据指定分析任务的结果目录制作中文 PPTX，面向初级专业人员，汇报时长 15 分钟。
 $biomedical-paper-mainline-reader 围绕关键证据解读论文，并提炼对肺损伤修复课题的启发。
-$biomedical-paper-story-reader 沿科学问题与关键图的证据故事解读这篇论文，生成独立 HTML。
 $biomedical-paper-story-reader-beginner 面向生物医学初学者解读这篇论文，先解释必要概念和实验原理，再带读关键图并生成离线 HTML。
 $codex-statusline 为 Codex 配置显示模型、剩余上下文、用量限制、目录名和 Git 分支的状态栏。
 ```
