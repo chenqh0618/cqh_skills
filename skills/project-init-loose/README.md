@@ -37,6 +37,8 @@ PIPELINE 按教学、汇报或交接需要创建。ABSTRACT 帮助判断相关�
 
 任务边界、版本区分和中间文件保留规则统一见 [共同工作约定](templates/project/WORKFLOW.md)，生成后位于 `.project/WORKFLOW.md`。SUMMARY 指明当前有效交付入口；放入 `work/` 不等于允许删除，被下游引用的对象仍需明确保留并记录依赖。
 
+Git 跟踪边界与环境记录的保留范围见 [Git 跟踪范围](templates/project/WORKFLOW.md#git-跟踪范围)。共同忽略规则集中在 [忽略模板](templates/root_gitignore)，脚手架为已有 `.gitignore` 补缺并保留自定义内容；已有仓库移除跟踪见 [Git 跟踪策略](MIGRATION.md#git-跟踪策略)。
+
 ## 使用
 
 需要 Python 3.11+ 和 Git。在 Claude Code 中使用 `/project-init-loose`，在已发现该 skill 的 Codex 中使用 `$project-init-loose`，并说明目标项目。入口见 [SKILL.md](SKILL.md)。
@@ -88,7 +90,7 @@ python3 .project/tasks.py restore A01 --apply
 python3 -m unittest discover -s tests -v
 ```
 
-测试只使用临时小项目，覆盖初始化冲突、两端角色格式、任务身份、索引和归档恢复，不运行组学流程或调用外部模型。
+测试只使用临时小项目，覆盖初始化冲突、两端角色格式、Git 跟踪边界、任务身份、索引和归档恢复，不运行组学流程或调用外部模型。
 
 ## 初始化时明确类别与环境
 

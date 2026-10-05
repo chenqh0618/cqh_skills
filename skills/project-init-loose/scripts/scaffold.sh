@@ -129,11 +129,19 @@ try:
                         stream.write("- R 模板配置接口：SCRNA_PARAMS 为单元配置文件，ORG 为实际物种，OUTPUT_ROOT 为本单元 results 的绝对路径；scope 为该输出根内的对象分层，跨单元输入由配置显式指定。\n")
         subprocess.run([sys.executable, str(stage / ".project/tasks.py"), "index"], check=True, capture_output=True, text=True)
         (stage / ".project/tasks.lock").unlink()
-        ignore = gitignore.read_text() if gitignore.exists() else (templates / "root_gitignore").read_text()
-        rules = ["/resources_ref/", "/.project/tasks.lock", "/.loose-init-*/", "/analysis/.new-task-*/", "/explore/.new-task-*/", ".loose-*"]
+        template_ignore = (templates / "root_gitignore").read_text()
+        template_lines = template_ignore.splitlines()
+        begin = "# BEGIN project-init-loose managed ignores"
+        end = "# END project-init-loose managed ignores"
+        require(template_lines.count(begin) == 1 and template_lines.count(end) == 1
+                and template_lines.index(begin) < template_lines.index(end),
+                "Invalid managed Git ignore section in templates/root_gitignore")
+        rules = [line for line in template_lines[template_lines.index(begin) + 1:template_lines.index(end)]
+                 if line and not line.startswith("#")]
+        ignore = gitignore.read_text() if gitignore.exists() else template_ignore
         missing = [rule for rule in rules if rule not in ignore.splitlines()]
         if missing:
-            ignore = ignore.rstrip() + "\n\n# project-init-loose local data and runtime files\n" + "\n".join(missing) + "\n"
+            ignore = ignore.rstrip() + "\n\n# project-init-loose managed ignores (missing rules)\n" + "\n".join(missing) + "\n"
         (stage / ".gitignore").write_text(ignore)
         if gitignore.exists():
             (stage / ".gitignore").chmod(gitignore.stat().st_mode & 0o777)

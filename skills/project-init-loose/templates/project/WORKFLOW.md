@@ -58,6 +58,12 @@ python3 .project/tasks.py new explore markerSensitivity --agent claude --questio
 
 多个产物版本并存时，用方法、条件或关键参数区分命名，在 SUMMARY 中指出当前有效版本及用途；不靠 `final2`、`latest_new` 等名称判断有效性。
 
+## Git 跟踪范围
+
+Git 跟踪管理文档、规则入口、项目角色、任务与归档索引，以及 `.project/` 的脚本、模板和记录。`.project/DEPENDENCIES.md` 与按需建立的 `.project/environments/` 保存依赖、部署脚本、版本锁定、安装日志、验证结果和迁移快照，纳入版本管理。
+
+A/E 任务整个目录（含脚本、配置、运行记录和结果）、归档任务、`docs/`、`envs/` 与 `resources_ref/` 按根 `.gitignore` 忽略，研究数据实体默认同样忽略。必要的数据元信息例外按项目实际约定维护，保留已有规则。任务文件仍在磁盘保留，复现依据继续按本文件和 AS_RUN 维护。移除跟踪只改变 Git 索引；磁盘清理另按归档约定授权执行。
+
 ## 文档分工与读取
 
 根与三侧 CLAUDE 按当前任务指路，共同执行约定集中在本文件；当前依赖结构、版本、调用命令与验证范围在 [DEPENDENCIES.md](DEPENDENCIES.md) 维护。

@@ -104,6 +104,101 @@ class InitializationChoicesTest(unittest.TestCase):
                 if existing_ignore:
                     self.assertTrue((project / ".gitignore").read_text().startswith("# user rule\ncustom.tmp\n"))
 
+    def test_git_tracking_boundary_for_new_and_existing_gitignore(self):
+        for existing_ignore in (False, True):
+            with self.subTest(existing_ignore=existing_ignore), tempfile.TemporaryDirectory() as temp:
+                project = Path(temp)
+                user_rules = "# user rules\ncustom.tmp\n/data/*\n!/data/sample_info.tsv\n/resources_ref/\n"
+                if existing_ignore:
+                    (project / ".gitignore").write_text(user_rules)
+                result = self.scaffold(project)
+                self.assertEqual(result.returncode, 0, result.stderr)
+
+                ignored = [
+                    "analysis/A01_fixture/ABSTRACT.md",
+                    "analysis/A01_fixture/SUMMARY.md",
+                    "analysis/A01_fixture/AS_RUN.md",
+                    "analysis/A01_fixture/scripts/run.py",
+                    "analysis/A01_fixture/config/params.json",
+                    "analysis/A01_fixture/logs/run.log",
+                    "analysis/A01_fixture/results/table.tsv",
+                    "explore/E01_fixture/scripts/run.py",
+                    "explore/E01_fixture/SUMMARY.md",
+                    "_archived/analysis/A02_fixture/scripts/run.py",
+                    "_archived/explore/E02_fixture/SUMMARY.md",
+                    "docs/local.md",
+                    "envs/py_core/bin/python",
+                    "envs/cache/manifest.json",
+                    "resources_ref/genome/reference.txt",
+                    "data/raw.txt",
+                    ".project/tasks.lock",
+                    ".loose-init-fixture/temp.txt",
+                    "analysis/.new-task-fixture/temp.txt",
+                    "explore/.new-task-fixture/temp.txt",
+                    ".loose-fixture",
+                ]
+                retained = [
+                    "CLAUDE.md", "AGENTS.md", "TASKS.md",
+                    "analysis/CLAUDE.md", "analysis/AGENTS.md", "analysis/Another.md",
+                    "explore/CLAUDE.md", "explore/AGENTS.md", "explore/Examples.md",
+                    "mgmt/PROJECT.md", "_archived/CLAUDE.md", "_archived/INDEX.md",
+                    ".claude/agents/analyst.md", ".codex/agents/analyst.toml",
+                    ".project/DEPENDENCIES.md", ".project/tasks.py",
+                    ".project/templates/SUMMARY.md",
+                    ".project/environments/run.sh",
+                    ".project/environments/recipes/env-linux-64.explicit.txt",
+                    ".project/environments/installed/packages.json",
+                    ".project/environments/installation/install.log",
+                    ".project/environments/validation/report.json",
+                    ".project/environments/validation/plot.png",
+                    ".project/environments/before/README.md",
+                    ".project/environments/source/docs/PROJECT_USAGE.md",
+                    "other/analysis/A01_fixture/scripts/run.py",
+                ]
+                (retained if existing_ignore else ignored).append("data/sample_info.tsv")
+                if existing_ignore:
+                    ignored.append("custom.tmp")
+                for name in ignored + retained:
+                    path = project / name
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    if not path.exists():
+                        path.write_text("fixture\n")
+                    with self.subTest(path=name):
+                        check = subprocess.run(["git", "check-ignore", "--quiet", name],
+                                               cwd=project, capture_output=True, text=True)
+                        self.assertEqual(check.returncode, 0 if name in ignored else 1, check.stderr)
+                subprocess.run(["git", "add", "--", "."], cwd=project, check=True, capture_output=True)
+                tracked = set(subprocess.check_output(["git", "ls-files", "-z"], cwd=project)
+                              .decode().split("\0")[:-1])
+                self.assertTrue(set(retained).issubset(tracked), set(retained) - tracked)
+                self.assertFalse(set(ignored) & tracked, set(ignored) & tracked)
+                ignore = (project / ".gitignore").read_text()
+                self.assertEqual(ignore.splitlines().count("/resources_ref/"), 1)
+                if existing_ignore:
+                    self.assertTrue(ignore.startswith(user_rules))
+
+    def test_scaffold_preserves_existing_index_and_files(self):
+        with tempfile.TemporaryDirectory() as temp:
+            project = Path(temp)
+            (project / ".gitignore").write_text("# existing project\ncustom.tmp\n")
+            contents = {"docs/local.md": b"local documentation\n", "data/sample_info.tsv": b"sample\tgroup\n"}
+            for name, content in contents.items():
+                path = project / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(content)
+            subprocess.run(["git", "init", "--quiet"], cwd=project, check=True, capture_output=True)
+            subprocess.run(["git", "add", "--", ".gitignore", *contents],
+                           cwd=project, check=True, capture_output=True)
+            before = subprocess.check_output(["git", "ls-files", "-z"], cwd=project)
+            result = self.scaffold(project)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(subprocess.check_output(["git", "ls-files", "-z"], cwd=project), before)
+            for name, content in contents.items():
+                self.assertEqual((project / name).read_bytes(), content)
+            check = subprocess.run(["git", "check-ignore", "--no-index", "--quiet", "docs/local.md"],
+                                   cwd=project, capture_output=True, text=True)
+            self.assertEqual(check.returncode, 0, check.stderr)
+
     def test_generated_dependency_entry_links_resolve(self):
         with tempfile.TemporaryDirectory() as temp:
             project = Path(temp)

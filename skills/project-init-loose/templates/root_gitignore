@@ -1,10 +1,31 @@
 # ── 原始数据：只读外部数据，绝不入库 ──
 /data/
 
-# ── 参考数据实体与本地链接：来源、版本和校验记录在 .project/ ──
+# BEGIN project-init-loose managed ignores
+# A/E 任务整体不入 Git；两侧规则入口继续跟踪
+/analysis/A[0-9]*/
+/explore/E[0-9]*/
+
+# 归档任务同样不入 Git；归档规则与索引继续跟踪
+/_archived/analysis/
+/_archived/explore/
+
+# 本地 docs 文档不入 Git
+/docs/
+
+# 环境实体、包缓存及参考数据；来源、版本与校验记录保留在 .project/
+/envs/
 /resources_ref/
 
-# ── 分析产物里的大二进制（避免误提交；脚本与 SUMMARY 要入库）──
+# 初始化和任务工具的运行时文件
+/.project/tasks.lock
+/.loose-init-*/
+/analysis/.new-task-*/
+/explore/.new-task-*/
+.loose-*
+# END project-init-loose managed ignores
+
+# ── 通用大文件兜底 ──
 *.rds
 *.h5
 *.h5ad
@@ -34,5 +55,7 @@ Thumbs.db
 .ipynb_checkpoints/
 __pycache__/
 *.pyc
+.venv/
+venv/
 .vscode/
 .idea/
