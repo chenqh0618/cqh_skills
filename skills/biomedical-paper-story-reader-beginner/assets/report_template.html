@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>论文故事解读 · 初学者版</title><style>
+:root{--bg:#f6f4ef;--paper:#fffdfa;--ink:#1d2328;--muted:#6b6f73;--line:#dedad2;--accent:#3d5a54;--soft:#eef2ef;--warm:#f4eee5}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.8}
+main{max-width:980px;margin:0 auto;padding:64px 28px 100px}.hero{padding:42px 46px;background:var(--paper);border:1px solid var(--line);border-radius:24px}.eyebrow{font-size:13px;letter-spacing:.12em;color:var(--accent);font-weight:700}.hero h1{font-size:42px;line-height:1.22;margin:12px 0 16px}.lead{font-size:20px;color:#3f4549;margin:0}.storymap{display:grid;gap:12px;margin:34px 0}.node{background:var(--soft);border-left:4px solid var(--accent);padding:14px 18px;border-radius:8px}.section{margin-top:52px}.section h2{font-size:28px;margin-bottom:12px}.section h3{font-size:21px;margin-top:32px}.figure{margin:28px 0;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px}.figure img{width:100%;height:auto;border-radius:10px;display:block}.caption{font-size:14px;color:var(--muted);margin-top:12px}.evidence{margin:22px 0;padding:18px 20px;background:var(--warm);border-radius:14px}.evidence b{color:var(--accent)}.turn{font-size:20px;font-weight:650;margin:30px 0;color:#273b36}.limits{background:#f1f1f1;padding:20px;border-radius:14px}.footer{margin-top:70px;padding-top:22px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+@media(max-width:700px){main{padding:28px 16px 64px}.hero{padding:28px 24px}.hero h1{font-size:32px}.lead{font-size:18px}}
+@media print{body{background:#fff}.hero,.figure{border-color:#ccc}.section{break-inside:auto}.figure{break-inside:avoid}}
+
+p,li,figcaption{overflow-wrap:anywhere}a{color:#245e70}nav{margin:24px 0}nav a{margin-right:1em}details{padding:16px 20px;margin:20px 0;background:var(--soft);border-radius:12px}summary{cursor:pointer;font-weight:650}.read{padding:14px 18px;border-left:4px solid var(--accent);background:var(--soft)}.concept{margin:22px 0;padding:16px 20px;border:1px solid #cbdedb;border-left:4px solid var(--accent);border-radius:12px;background:#f0f6f4}.concept strong{color:var(--accent)}.concept p{margin:8px 0 0}:focus-visible{outline:3px solid #397689;outline-offset:3px}figure{margin-inline:0}blockquote{margin-inline:0}dl dt{font-weight:700}dl dd{margin:0 0 14px}@media print{details>*{display:block!important}main{max-width:none;padding:12px}.concept,.read,.evidence{break-inside:avoid}}</style></head>
+<body><main>
+<header class="hero"><div class="eyebrow">论文故事解读 · 初学者版</div><h1>【论文的核心问题，改写为易读标题】</h1><p>【原论文标题、作者、年份、期刊、DOI/来源链接】</p><p class="lead"><strong>一句话故事：</strong>【从什么未知走到什么认识；保留结论范围】</p></header>
+<nav aria-label="报告目录"><a href="#background">先懂问题</a><a href="#map">故事地图</a><a href="#node-1">关键证据</a><a href="#conclusion">记住什么</a><a href="#sources">出处与范围</a></nav>
+<section class="section" id="background"><h2>【为什么这个问题值得问】</h2><p>【先解释必要的生物系统及正常功能，再引出未知；首次术语就在这里用一句话解释】</p><p>【区分既有背景与论文待检验的问题，说明研究的大致思路】</p>
+<!-- 把这个可选概念框移动到首次需要解释的位置；无必要则删除。 -->
+<aside class="concept" aria-label="概念讲解"><strong>先懂一个概念｜【术语】</strong><p>【用熟悉的话说明它是什么、在本文中做什么；若使用类比，补一句类比的边界】</p><p>【说明它与下一步科学问题的关系，以及仅凭这个概念还不能推断什么】</p></aside></section>
+<section class="section" id="map"><h2>故事地图</h2><ol class="storymap"><li class="node">【第一个问题与需要的证据】</li><li class="node">【前一步带来的新问题】</li><li class="node">【最终能问到哪里；按论文增减节点】</li></ol></section>
+<!-- 复制下列节点形成通常3–5个连续叙事；更新id，按科学问题改标题。 -->
+<section class="section" id="node-1"><h2>【关键节点：用科学问题命名】</h2><p>【承接上一问；说明方法测什么、为什么选它、关键对照为何必要，再写观察和解释】</p>
+<figure class="figure"><!-- 获取可合法使用的原图后插入 img src="data:image/...;base64,..." alt="与真实图面对应的描述"；禁止虚构图像。 -->
+<div class="caption">【图像位置：若原图无法嵌入，改成明确的缺图说明与原图链接】</div><figcaption class="caption">【作者，年份，Fig./panel；来源链接；裁剪情况；核实的许可/版权信息】</figcaption></figure>
+<aside class="read" aria-label="读图提示"><strong>这张图怎么看：</strong>【先看轴/色标与单位，再认组名和颜色，比较指定对象；解释一个点与n代表什么，以及误差线。未报告的信息不要补猜】</aside>
+<p>【直接观察与作者解释分开；解释其支持的结论和边界，不把统计显著当生物学重要】</p>
+<aside class="evidence"><strong>证据锚点｜【Fig./panel】</strong><br>图中看到：【直接观察】<br>可以支持：【有范围的判断】<br>仍不能说明：【影响主线的缺口或负结果】</aside>
+<p class="turn">【这就引出下一问：为什么现在必须继续追问？】</p></section>
+<section class="section" id="conclusion"><h2>这篇论文让我们多知道了什么</h2><p>【用一段话串回问题推进，不重复摘要】</p><ul><li>最扎实的认识：【结论与适用范围】</li><li>还不能下的判断：【关键限制】</li><li>下一问：【最重要的未知】</li></ul></section>
+<details><summary>想多了解一点：本报告的几个术语</summary><dl><dt>【术语或缩写】</dt><dd>【简明定义和本文中的作用；必需的首次定义仍放正文】</dd></dl></details>
+<details><summary>再深一层：方法、补充证据与替代解释</summary><p>【可选细节与定位引用；决定性局限不可仅放折叠区】</p></details>
+<section class="section" id="sources"><h2>阅读范围与参考来源</h2><p>【已阅读全文/图注/方法/哪些补充材料；哪些未获得；图像来源与报告限制】</p><ol><li>【完整论文引用、稳定链接及文中所用图/页码】</li><li>【确实使用的背景来源，与本论文区分；无则删去】</li></ol></section>
+<footer class="footer">生物医学论文故事解读 · 初学者版｜【生成日期】｜【删去全部占位提示后交付】</footer>
+</main></body></html>
