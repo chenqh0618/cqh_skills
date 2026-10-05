@@ -1,6 +1,6 @@
 # cqh_skills
 
-个人 skills 的统一维护仓库，覆盖生物信息学项目组织与结果汇报。默认使用中文，科学结论以实际分析输出为依据。
+个人 skills 的统一维护仓库，覆盖生物信息学项目组织、结果汇报与 CLI 状态栏配置。默认使用中文，科学结论以实际分析输出为依据。
 
 | Skill | 用途 | 入口 |
 | --- | --- | --- |
@@ -9,6 +9,8 @@
 | `report-ppt` | 生成正式 PPTX，包含图表解读、逐页讲稿、证据来源和成品检查。 | [SKILL.md](skills/report-ppt/SKILL.md) |
 | `biomedical-paper-detail-reader` | 生物医学原始研究逐图精读，梳理研究框架、证据链和结论边界，交付独立 HTML。 | [SKILL.md](skills/biomedical-paper-detail-reader/SKILL.md) |
 | `biomedical-paper-mainline-reader` | 生物医学论文主线精读，聚焦关键证据，并提炼对肺损伤修复细胞动态与分子机制研究的可迁移启发，交付独立 HTML。 | [SKILL.md](skills/biomedical-paper-mainline-reader/SKILL.md) |
+| `codex-statusline` | 配置 Codex CLI 原生状态栏，支持字段选择、实用预设、预览与配置备份。 | [SKILL.md](skills/codex-statusline/SKILL.md) |
+| `claude-statusline` | 生成并安装 Claude Code 状态栏，支持列选择、主题及上下文和推理强度颜色提示。 | [SKILL.md](skills/claude-statusline/SKILL.md) |
 
 ## 维护与本地入口
 
@@ -26,6 +28,9 @@ ln -sT "$skill_repo/skills/project-init-loose" "$HOME/.claude/skills/project-ini
 for name in clarify-report report-ppt; do
     ln -sT "$skill_repo/adapters/claude/$name" "$HOME/.claude/skills/$name"
 done
+mkdir -p "${CODEX_HOME:-$HOME/.codex}/skills"
+ln -sT "$skill_repo/skills/codex-statusline" "${CODEX_HOME:-$HOME/.codex}/skills/codex-statusline"
+ln -sT "$skill_repo/skills/claude-statusline" "$HOME/.claude/skills/claude-statusline"
 ```
 
 使用时保留仓库完整目录及软链；本地入口依赖该克隆目录的位置。
@@ -38,13 +43,20 @@ done
 $project-init-loose 为指定项目初始化 mgmt/analysis/explore 工作区。
 $clarify-report 根据指定分析任务的结果目录生成中文 Markdown 报告，面向非本领域读者。
 $report-ppt 根据指定分析任务的结果目录制作中文 PPTX，面向初级专业人员，汇报时长 15 分钟。
+$codex-statusline 为 Codex 配置显示模型、剩余上下文、用量限制、目录名和 Git 分支的状态栏。
 ```
 
 Claude Code 使用对应的 `/project-init-loose`、`/clarify-report`、`/report-ppt`。调用报告 skill 时可指定任务范围、结果目录、读者或听众及详略要求；两个报告 skill 保留手动调用设置，`project-init-loose` 保留原有调用行为。
 
+Claude Code 状态栏使用 `/claude-statusline` 交互选择列和主题，或使用 `/claude-statusline dracula` 指定主题。两个状态栏 skill 的独立预览与安装命令见各自的 `SKILL.md`。
+
 ## 依赖与测试
 
 `project-init-loose` 需要 Python 3.11+ 和 Git，Python 代码仅依赖标准库。现有项目的更新方式见 [MIGRATION.md](skills/project-init-loose/MIGRATION.md)。
+
+`codex-statusline` 需要 Python 3.11+ 和 Codex CLI，Python 脚本仅依赖标准库。它修改 `[tui].status_line`；可用字段以当前 Codex 版本为准。
+
+`claude-statusline` 使用 Bun 运行生成器（未安装时可用 `npx -y bun`），生成的 Bash 脚本需要 `jq`。安装时写入 `~/.claude/scripts/statusline.sh` 并更新 `~/.claude/settings.json`。
 
 `report-ppt/scripts/pptx_support.py` 使用 Python、`python-pptx` 和 Pillow。渲染页面预览还需要 LibreOffice（或 `soffice`）与 `pdftoppm`。制作中文幻灯片时需检查目标环境的中文字体；辅助模块默认使用 `Noto Sans CJK SC`。
 
