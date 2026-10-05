@@ -6,7 +6,7 @@
 
 ```text
 project/
-├── CLAUDE.md / AGENTS.md          # 共用规则正文，按当前工作指路
+├── CLAUDE.md / AGENTS.md          # 共用入口正文，按当前工作指路
 ├── TASKS.md                       # 自动生成的非归档任务索引
 ├── .project/
 │   ├── WORKFLOW.md                # A/E 共用工作约定
@@ -99,4 +99,4 @@ bash scripts/scaffold.sh /absolute/project --domain scrna \
 
 四项决策参数需一起提供；不带参数保留旧的待分类骨架行为。`--reference-root` 可覆盖 scRNA_v2 入口。类别与环境方式独立选择；非 scRNA 项目不自动关联 scRNA。脚手架只写入选择并标记 planned，不安装/验证环境，不生成科学结果。
 
-`mgmt/PROJECT.md` 保存类别与选择依据；`mgmt/RESOURCES.md` 保存研究样本、观测及衍生产物；`.project/DEPENDENCIES.md` 统一登记参考数据、工具代码、环境及“任务用途 → 环境 → 启动命令”表，由根和分析/探索侧 CLAUDE 指向。分类按执行用途，管理侧维护研究数据事实，执行侧选用和记录依赖。参考数据实体与共享链接按需放在 `resources_ref/`，清单分别记录项目入口和真实目标；来源、下载校验、部署、锁定和验证详情按需链接，任务 AS_RUN 分别记录实际使用的研究数据与依赖。已有验证适用时直接复用，可以在授权范围内采用更适合的库外方法。
+生成后的背景与类别依据在 `mgmt/PROJECT.md`，研究数据在 `mgmt/RESOURCES.md`，当前分析依赖与启动命令在 `.project/DEPENDENCIES.md`。根和两侧 CLAUDE 提供入口；环境使用、方法选择和记录规则统一见 [共同工作约定](templates/project/WORKFLOW.md)。重要来源、部署及验证依据按需查阅已有专项记录。

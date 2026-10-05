@@ -126,8 +126,7 @@ try:
                     stream.write(f"- 参考代码库：`{md_value(reference_root)}`；版本：`{md_value(version)}`。\n")
                     if is_scrna:
                         stream.write(f"- scRNA 初始化与调用接口：`{md_value(str(ref / 'docs/PROJECT_USAGE.md'))}`。\n")
-                        stream.write("- 采用该库的 R 模板时使用 SCRNA_PARAMS 指定本单元配置；ORG 按实际物种填写，OUTPUT_ROOT 指向本单元 results，跨单元输入显式指定。\n")
-                        stream.write("- 共享环境缺失或不满足依赖时先准备所选环境；不回退到旧 scRNA 环境。\n")
+                        stream.write("- R 模板配置接口：SCRNA_PARAMS 为单元配置文件，ORG 为实际物种，OUTPUT_ROOT 为本单元 results 的绝对路径；scope 为该输出根内的对象分层，跨单元输入由配置显式指定。\n")
         subprocess.run([sys.executable, str(stage / ".project/tasks.py"), "index"], check=True, capture_output=True, text=True)
         (stage / ".project/tasks.lock").unlink()
         ignore = gitignore.read_text() if gitignore.exists() else (templates / "root_gitignore").read_text()
