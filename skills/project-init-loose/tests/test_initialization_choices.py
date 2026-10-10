@@ -205,7 +205,7 @@ class InitializationChoicesTest(unittest.TestCase):
             result = self.scaffold(project)
             self.assertEqual(result.returncode, 0, result.stderr)
             dependencies = project / ".project/DEPENDENCIES.md"
-            for name in ("CLAUDE.md", "analysis/CLAUDE.md", "explore/CLAUDE.md", ".project/WORKFLOW.md"):
+            for name in ("CLAUDE.md", ".project/WORKFLOW.md"):
                 source = project / name
                 targets = re.findall(r'\[[^\]]+\]\(([^)]+)\)', source.read_text())
                 dependency_entries = [target for target in targets if "DEPENDENCIES.md" in target]

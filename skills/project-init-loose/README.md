@@ -6,7 +6,7 @@
 
 ```text
 project/
-├── CLAUDE.md / AGENTS.md          # 共用入口正文，按当前工作指路
+├── CLAUDE.md / AGENTS.md          # 项目入口与通用科学要求，共用正文
 ├── TASKS.md                       # 自动生成的非归档任务索引
 ├── .project/
 │   ├── WORKFLOW.md                # A/E 共用工作约定
@@ -18,18 +18,25 @@ project/
 ├── .claude/agents/*.md            # mgr / analyst / explorer / reviewer
 ├── .codex/agents/*.toml           # 相同职责的 Codex 原生入口
 ├── mgmt/
+│   ├── CLAUDE.md / AGENTS.md      # 管理侧职责与约定
 │   ├── PROJECT.md / RESOURCES.md
 │   ├── PLAN.md / FINDINGS.md
 │   └── plans/ / history/
-├── analysis/A14_cellTypeProportion_0911_codex/
-│   ├── ABSTRACT.md / SUMMARY.md / AS_RUN.md
-│   └── scripts/ / logs/ / results/
-├── explore/E26_markerSensitivity_0911_claude/
+├── analysis/
+│   ├── CLAUDE.md / AGENTS.md      # 分析侧职责与按需读取入口
+│   └── A14_cellTypeProportion_0911_codex/
+│       ├── ABSTRACT.md / SUMMARY.md / AS_RUN.md
+│       └── scripts/ / logs/ / results/
+├── explore/
+│   ├── CLAUDE.md / AGENTS.md      # 探索侧职责与按需读取入口
+│   └── E26_markerSensitivity_0911_claude/
 └── _archived/
     ├── INDEX.md
     ├── analysis/
     └── explore/
 ```
+
+项目级 prompt 分为项目根与管理／分析／探索子目录两级。根内嵌通用科学要求并提供读取入口，子目录保留各侧约定；执行细节按需查 WORKFLOW，相关内容缺失或变更时补读。科学要求随模板生成，由各项目维护，无需引用个人目录中的共享 prompt。
 
 PIPELINE 按教学、汇报或交接需要创建。ABSTRACT 帮助判断相关性；SUMMARY 保存当前有效结论；AS_RUN 给出最终实际方法与复现入口。科学方法变化记录原因和影响，纯样式微调只维护最终代码与产物。
 
@@ -101,4 +108,4 @@ bash scripts/scaffold.sh /absolute/project --domain scrna \
 
 四项决策参数需一起提供；不带参数保留旧的待分类骨架行为。`--reference-root` 可覆盖 scRNA_v2 入口。类别与环境方式独立选择；非 scRNA 项目不自动关联 scRNA。脚手架只写入选择并标记 planned，不安装/验证环境，不生成科学结果。
 
-生成后的背景与类别依据在 `mgmt/PROJECT.md`，研究数据在 `mgmt/RESOURCES.md`，当前分析依赖与启动命令在 `.project/DEPENDENCIES.md`。根和两侧 CLAUDE 提供入口；环境使用、方法选择和记录规则统一见 [共同工作约定](templates/project/WORKFLOW.md)。重要来源、部署及验证依据按需查阅已有专项记录。
+生成后的背景与类别依据在 `mgmt/PROJECT.md`，研究数据在 `mgmt/RESOURCES.md`，当前分析依赖与启动命令在 `.project/DEPENDENCIES.md`。这些入口统一由根 CLAUDE 提供；环境使用、方法选择和记录规则统一见 [共同工作约定](templates/project/WORKFLOW.md)。重要来源、部署及验证依据按需查阅已有专项记录。
