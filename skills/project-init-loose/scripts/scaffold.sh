@@ -89,7 +89,10 @@ try:
         shutil.copytree(templates / "project", stage / ".project", dirs_exist_ok=True)
         shutil.copytree(templates / "unit", stage / ".project/templates")
         shutil.copy2(scripts / "task_tools.py", stage / ".project/tasks.py")
-        shutil.copy2(scripts.parent / "MIGRATION.md", stage / ".project/MIGRATION.md")
+        # Adapt the skill-local workflow link to the generated .project/ directory.
+        migration = (scripts.parent / "MIGRATION.md").read_text()
+        (stage / ".project/MIGRATION.md").write_text(
+            migration.replace("(templates/project/WORKFLOW.md", "(WORKFLOW.md"))
         for name in roles:
             source = templates / "agents" / f"{name}.md"
             text = source.read_text()
