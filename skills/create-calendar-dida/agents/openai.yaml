@@ -1,0 +1,6 @@
+interface:
+  display_name: "滴答清单日程创建"
+  short_description: "从远端清单识别项目，归类滴答日程并添加三维标签、优先级与全天日期"
+  default_prompt: "使用 $create-calendar-dida 根据任务内容选择清单、添加标签和优先级，并按指定日期在滴答清单创建日程。"
+policy:
+  allow_implicit_invocation: true
