@@ -1,0 +1,7 @@
+{
+  "email": "YOUR_ABLESCI_EMAIL",
+  "password": "YOUR_ABLESCI_PASSWORD",
+  "output_dir": "../R0_ablesciCollect",
+  "max_request_points": 10,
+  "max_wait_seconds": 600
+}

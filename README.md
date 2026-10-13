@@ -1,10 +1,11 @@
 # cqh_skills
 
-个人 skills 的统一维护仓库，覆盖生物医学论文解读、生物信息学项目组织、结果汇报、滴答清单日程创建与 CLI 状态栏配置。默认使用中文，科学结论以实际分析输出为依据。
+个人 skills 的统一维护仓库，覆盖科研通全文与支持材料获取、生物医学论文解读、生物信息学项目组织、结果汇报、滴答清单日程创建与 CLI 状态栏配置。默认使用中文，科学结论以实际分析输出为依据。
 
 | Skill | 用途 | 入口 |
 | --- | --- | --- |
 | `project-init-loose` | 初始化松耦合项目工作区，提供任务记录、索引与可恢复归档工具。 | [SKILL.md](skills/project-init-loose/SKILL.md) |
+| `ablesci-fulltext` | 通过科研通按 DOI 选择求助论文全文或支持材料，分别去重、下载核验与采纳。 | [SKILL.md](skills/ablesci-fulltext/SKILL.md) |
 | `create-calendar-dida` | 以滴答远端项目清单作为白名单，按内容归类日程、添加三维标签、判断优先级并安排日期。 | [SKILL.md](skills/create-calendar-dida/SKILL.md) |
 | `clarify-report` | 生成通俗易读的 Markdown 报告，包含图表解读、证据链接和术语表。 | [SKILL.md](skills/clarify-report/SKILL.md) |
 | `report-ppt` | 生成正式 PPTX，包含图表解读、逐页讲稿、证据来源和成品检查。 | [SKILL.md](skills/report-ppt/SKILL.md) |
@@ -33,7 +34,7 @@
 ```bash
 skill_repo="/absolute/path/to/cqh_skills"
 mkdir -p "$HOME/.agents/skills" "$HOME/.claude/skills"
-for name in project-init-loose create-calendar-dida clarify-report report-ppt biomedical-paper-detail-reader biomedical-paper-mainline-reader biomedical-paper-story-reader-beginner; do
+for name in project-init-loose ablesci-fulltext create-calendar-dida clarify-report report-ppt biomedical-paper-detail-reader biomedical-paper-mainline-reader biomedical-paper-story-reader-beginner; do
     ln -sT "$skill_repo/skills/$name" "$HOME/.agents/skills/$name"
 done
 ln -sT "$skill_repo/skills/project-init-loose" "$HOME/.claude/skills/project-init-loose"
@@ -53,6 +54,8 @@ ln -sT "$skill_repo/skills/claude-statusline" "$HOME/.claude/skills/claude-statu
 
 ```text
 $project-init-loose 为指定项目初始化 mgmt/analysis/explore 工作区。
+$ablesci-fulltext 求助全文，DOI：10.1126/science.ael0508
+$ablesci-fulltext 求助支持材料，DOI：10.1126/science.ael0508
 $create-calendar-dida 把 proj_HMFmmu_scRNA 的结果报告整理安排在明天，全天完成。
 $clarify-report 根据指定分析任务的结果目录生成中文 Markdown 报告，面向非本领域读者。
 $report-ppt 根据指定分析任务的结果目录制作中文 PPTX，面向初级专业人员，汇报时长 15 分钟。
@@ -68,6 +71,8 @@ Claude Code 状态栏使用 `/claude-statusline` 交互选择列和主题，或�
 ## 依赖与测试
 
 `project-init-loose` 需要 Python 3.11+ 和 Git，Python 代码仅依赖标准库。现有项目的更新方式见 [MIGRATION.md](skills/project-init-loose/MIGRATION.md)。
+
+`ablesci-fulltext` 需要正常浏览器访问科研通；使用 Python 后备方案时需要 Playwright 与 Chromium。全文 PDF 核验脚本需要 Python 3.11+ 和 Poppler（`pdfinfo`、`pdftotext`）。从 [配置模板](skills/ablesci-fulltext/references/config.example.json) 创建本地私有配置，设置权限为 `600`；真实凭据与下载文件不提交到仓库。全文流程已实测，支持材料已验证网页选项切换，尚未完成实际求助下载的端到端测试。
 
 `codex-statusline` 需要 Python 3.11+ 和 Codex CLI，Python 脚本仅依赖标准库。它修改 `[tui].status_line`；可用字段以当前 Codex 版本为准。
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "科研通全文与支持材料"
+  short_description: "按 DOI 选择求助论文全文或支持材料，分别去重、下载核验并记录结果"
+  default_prompt: "使用 $ablesci-fulltext 按我指定的类型（全文或支持材料）求助并下载 DOI 对应的文件，未指定类型时默认全文。"
