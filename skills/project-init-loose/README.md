@@ -106,6 +106,6 @@ bash scripts/scaffold.sh /absolute/project --domain scrna \
   --project-class complex --env-mode project --reason '长期多阶段分析，需要独立依赖和交付'
 ```
 
-四项决策参数需一起提供；不带参数保留旧的待分类骨架行为。`--reference-root` 可覆盖 scRNA_v2 入口。类别与环境方式独立选择；非 scRNA 项目不自动关联 scRNA。脚手架只写入选择并标记 planned，不安装/验证环境，不生成科学结果。
+四项决策参数需一起提供；不带参数保留旧的待分类骨架行为。`--reference-root` 可覆盖 scRNA 入口。类别与环境方式独立选择；非 scRNA 项目不自动关联 scRNA。脚手架只写入选择并标记 planned，不安装/验证环境，不生成科学结果。
 
 生成后的背景与类别依据在 `mgmt/PROJECT.md`，研究数据在 `mgmt/RESOURCES.md`，当前分析依赖与启动命令在 `.project/DEPENDENCIES.md`。根 CLAUDE 提供总入口，子目录保留相关提示；环境使用、方法选择和记录规则统一见 [共同工作约定](templates/project/WORKFLOW.md)。重要来源、部署及验证依据按需查阅已有专项记录。

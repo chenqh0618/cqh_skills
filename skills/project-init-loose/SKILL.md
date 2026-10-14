@@ -12,7 +12,7 @@ description: 初始化生物信息学项目的松耦合管理、分析与探索�
 1. 从用户指令或明确的当前项目上下文确定目标目录，解析真实路径。只有目标无法确定时才询问。
 2. 检查现有规则、背景文档和数据入口。读取足够说明研究背景、数据位置和样本设计的信息；大型数据只查清单、元数据和浅层结构。
 3. 在初始化时明确分析领域、项目类别（`lightweight` / `complex`）和环境方式（`shared` / `project`），记录依据。类别由维护周期、依赖变更和交付要求决定，不仅看数据量；环境方式独立选择，用户已有选择优先。轻量且依赖满足时可共享，长期/复杂或需要新增依赖时推荐项目环境。根据上下文可以确定时直接填写，只有无法判断且会改变方案时才询问。
-   scRNA/snRNA 项目读取 `/public/data/cqh_data/proj_sync/tools_db/scRNA_v2/docs/PROJECT_USAGE.md`；参考库不可访问时记录缺口，不静默切到旧库。其他领域按其实际参考库处理，不自动加入 scRNA 依赖。
+   scRNA/snRNA 项目读取 `/public/data/cqh_data/proj_sync/tools_db/scRNA/docs/PROJECT_USAGE.md`；参考库不可访问时记录缺口，不静默切到旧库。其他领域按其实际参考库处理，不自动加入 scRNA 依赖。
    运行脚手架（Python 3.11+，仅标准库）：
 
    ```bash

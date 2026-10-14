@@ -5,6 +5,7 @@ import unittest
 from pathlib import Path
 
 SKILL = Path(__file__).resolve().parents[1]
+SCRNA_REFERENCE = "/public/data/cqh_data/proj_sync/tools_db/scRNA"
 
 
 class InitializationChoicesTest(unittest.TestCase):
@@ -24,9 +25,9 @@ class InitializationChoicesTest(unittest.TestCase):
                 dependencies = (project / ".project/DEPENDENCIES.md").read_text()
                 self.assertIn(project_class, background)
                 self.assertIn(f"`{mode}`", dependencies)
-                self.assertIn("scRNA_v2", dependencies)
+                self.assertIn(f"`{SCRNA_REFERENCE}`", dependencies)
                 self.assertIn("planned", dependencies)
-                self.assertNotIn("scRNA_v2", resources)
+                self.assertNotIn(SCRNA_REFERENCE, resources)
                 self.assertNotIn("DEPENDENCIES.md", resources)
                 self.assertNotIn(f"`{mode}`", resources)
                 self.assertFalse((project / "envs").exists())
@@ -38,8 +39,8 @@ class InitializationChoicesTest(unittest.TestCase):
             result = self.scaffold(project, "--domain", "scrna_atac_custom", "--project-class", "complex",
                                    "--env-mode", "project", "--reason", "独立多组学项目")
             self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertNotIn("scRNA_v2", (project / "mgmt/RESOURCES.md").read_text())
-            self.assertNotIn("scRNA_v2", (project / ".project/DEPENDENCIES.md").read_text())
+            self.assertNotIn(SCRNA_REFERENCE, (project / "mgmt/RESOURCES.md").read_text())
+            self.assertNotIn(SCRNA_REFERENCE, (project / ".project/DEPENDENCIES.md").read_text())
 
     def test_incomplete_choices_fail_before_any_writes(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -70,7 +71,7 @@ class InitializationChoicesTest(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             dependencies = (project / ".project/DEPENDENCIES.md").read_text()
             self.assertNotIn("默认环境方式", dependencies)
-            self.assertNotIn("scRNA_v2", dependencies)
+            self.assertNotIn(SCRNA_REFERENCE, dependencies)
             self.assertFalse((project / "envs").exists())
             self.assertFalse((project / ".project/environments/USAGE.md").exists())
             self.assertFalse((project / "resources_ref").exists())

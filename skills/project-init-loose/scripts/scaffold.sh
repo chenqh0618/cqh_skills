@@ -35,7 +35,7 @@ try:
     is_scrna = bool(options.domain and options.domain.lower() in {"scrna", "scrna-seq", "snrna", "snrna-seq"})
     reference_root = options.reference_root
     if is_scrna and not reference_root:
-        reference_root = "/public/data/cqh_data/proj_sync/tools_db/scRNA_v2"
+        reference_root = "/public/data/cqh_data/proj_sync/tools_db/scRNA"
     if reference_root:
         require(bool(options.domain), "--reference-root requires explicit project decisions")
         require(Path(reference_root).is_absolute(), "Reference root must be absolute")
