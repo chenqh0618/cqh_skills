@@ -1,0 +1,6 @@
+interface:
+  display_name: "分析流程 HTML 解读"
+  short_description: "为分析单元生成直观、可追溯的离线 HTML，支持单元范围和完整上游流程"
+  default_prompt: "使用 $analysis-pipeline-html 为指定分析单元生成直观易懂的离线 HTML，默认仅展开本单元，逐步解释目的、方法与参数、结果及关键图表。"
+policy:
+  allow_implicit_invocation: true

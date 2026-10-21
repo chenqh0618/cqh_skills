@@ -9,6 +9,7 @@
 | `create-calendar-dida` | 以滴答远端项目清单作为白名单，按内容归类日程、添加三维标签、判断优先级并安排日期。 | [SKILL.md](skills/create-calendar-dida/SKILL.md) |
 | `clarify-report` | 生成通俗易读的 Markdown 报告，包含图表解读、证据链接和术语表。 | [SKILL.md](skills/clarify-report/SKILL.md) |
 | `report-ppt` | 生成正式 PPTX，包含图表解读、逐页讲稿、证据来源和成品检查。 | [SKILL.md](skills/report-ppt/SKILL.md) |
+| `analysis-pipeline-html` | 按步骤解释分析目的、方法与参数、结果和关键图表，生成离线单文件 HTML；默认展开本单元，可选完整上游流程。 | [SKILL.md](skills/analysis-pipeline-html/SKILL.md) |
 | `biomedical-paper-detail-reader` | 生物医学原始研究逐图精读，梳理研究框架、证据链和结论边界，交付独立 HTML。 | [SKILL.md](skills/biomedical-paper-detail-reader/SKILL.md) |
 | `biomedical-paper-mainline-reader` | 生物医学论文主线精读，聚焦关键证据，并提炼对肺损伤修复细胞动态与分子机制研究的可迁移启发，交付独立 HTML。 | [SKILL.md](skills/biomedical-paper-mainline-reader/SKILL.md) |
 | `biomedical-paper-story-reader-beginner` | 面向生物医学初学者，在故事线中补足背景、术语、实验读出和对照原理，加入概念框及读图路线，交付离线单文件 HTML。 | [SKILL.md](skills/biomedical-paper-story-reader-beginner/SKILL.md) |
@@ -34,10 +35,11 @@
 ```bash
 skill_repo="/absolute/path/to/cqh_skills"
 mkdir -p "$HOME/.agents/skills" "$HOME/.claude/skills"
-for name in project-init-loose ablesci-fulltext create-calendar-dida clarify-report report-ppt biomedical-paper-detail-reader biomedical-paper-mainline-reader biomedical-paper-story-reader-beginner; do
+for name in project-init-loose ablesci-fulltext create-calendar-dida clarify-report report-ppt analysis-pipeline-html biomedical-paper-detail-reader biomedical-paper-mainline-reader biomedical-paper-story-reader-beginner; do
     ln -sT "$skill_repo/skills/$name" "$HOME/.agents/skills/$name"
 done
 ln -sT "$skill_repo/skills/project-init-loose" "$HOME/.claude/skills/project-init-loose"
+ln -sT "$skill_repo/skills/analysis-pipeline-html" "$HOME/.claude/skills/analysis-pipeline-html"
 for name in clarify-report report-ppt; do
     ln -sT "$skill_repo/adapters/claude/$name" "$HOME/.claude/skills/$name"
 done
@@ -59,12 +61,16 @@ $ablesci-fulltext 求助支持材料，DOI：10.1126/science.ael0508
 $create-calendar-dida 把 proj_HMFmmu_scRNA 的结果报告整理安排在明天，全天完成。
 $clarify-report 根据指定分析任务的结果目录生成中文 Markdown 报告，面向非本领域读者。
 $report-ppt 根据指定分析任务的结果目录制作中文 PPTX，面向初级专业人员，汇报时长 15 分钟。
+$analysis-pipeline-html 为 E01 生成分析流程解读 HTML。
+$analysis-pipeline-html 使用模式 2，从项目原始数据到 E01 结论讲解完整流程。
 $biomedical-paper-mainline-reader 围绕关键证据解读论文，并提炼对肺损伤修复课题的启发。
 $biomedical-paper-story-reader-beginner 面向生物医学初学者解读这篇论文，先解释必要概念和实验原理，再带读关键图并生成离线 HTML。
 $codex-statusline 为 Codex 配置显示模型、剩余上下文、用量限制、目录名和 Git 分支的状态栏。
 ```
 
 Claude Code 使用对应的 `/project-init-loose`、`/clarify-report`、`/report-ppt`。调用报告 skill 时可指定任务范围、结果目录、读者或听众及详略要求；两个报告 skill 保留手动调用设置，`project-init-loose` 保留原有调用行为。
+
+`analysis-pipeline-html` 可用 `$analysis-pipeline-html` 或 Claude Code 的 `/analysis-pipeline-html` 调用，也允许针对分析流程 HTML 请求自动选用。模式 1 默认只展开指定单元，上游作为输入概述；模式 2 按实际依赖纳入必要上游。默认输出单元内的 `analysis_pipeline.html` / `analysis_pipeline_full.html`，核心图表内嵌，来源链接保留用于回查。
 
 Claude Code 状态栏使用 `/claude-statusline` 交互选择列和主题，或使用 `/claude-statusline dracula` 指定主题。两个状态栏 skill 的独立预览与安装命令见各自的 `SKILL.md`。
 
@@ -80,11 +86,14 @@ Claude Code 状态栏使用 `/claude-statusline` 交互选择列和主题，或�
 
 `report-ppt/scripts/pptx_support.py` 使用 Python、`python-pptx` 和 Pillow。渲染页面预览还需要 LibreOffice（或 `soffice`）与 `pdftoppm`。制作中文幻灯片时需检查目标环境的中文字体；辅助模块默认使用 `Noto Sans CJK SC`。
 
+`analysis-pipeline-html/scripts/html_report.py` 仅依赖 Python 3.10+ 标准库，负责内嵌已核实图片、重定位来源链接及静态结构检查。PDF 图页转换按需使用已有 Poppler 或 PyMuPDF；视觉检查使用可用浏览器。打包脚本不执行科学分析，也不自动核实科学结论。
+
 从仓库根目录运行对应测试；PPT 测试使用可导入 `pptx` 和 `PIL` 的环境：
 
 ```bash
 python3 -B -m unittest discover -s skills/project-init-loose/tests -v
 python -B -m unittest discover -s skills/report-ppt/tests -v
+python3 -B -m unittest discover -s skills/analysis-pipeline-html/tests -v
 ```
 
 测试使用临时小项目、合成图片与幻灯片，验证工具行为；实际报告仍需按各 skill 的工作流核实科学证据与成品可读性。

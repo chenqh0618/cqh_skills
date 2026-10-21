@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{TITLE}}</title>
+  <style>
+    :root{--ink:#203540;--muted:#536a76;--paper:#f3f6f7;--line:#d8e2e6;--accent:#096e67;--accent-bg:#edf7f3;--blue:#275e98;--blue-bg:#edf4fb;--amber:#85510b;--amber-bg:#fff7e8}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:20px}
+    body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.8 system-ui,-apple-system,"Noto Sans CJK SC","Microsoft YaHei",sans-serif}
+    a{color:var(--blue);text-underline-offset:3px;overflow-wrap:anywhere}a:hover{color:var(--accent)}
+    a:focus-visible,button:focus-visible,summary:focus-visible,img[tabindex]:focus-visible{outline:3px solid #d9a03f;outline-offset:4px}
+    h1,h2,h3,p,figure{margin:0}h1{font-size:clamp(28px,3vw,38px);line-height:1.35;margin:8px 0 16px}
+    h2{font-size:23px;line-height:1.45}h3{font-size:15px;line-height:1.5;margin-bottom:8px;color:var(--muted)}p+p{margin-top:10px}
+    code{font-size:.86em;background:#eef2f4;border-radius:4px;padding:2px 5px;overflow-wrap:anywhere}pre{overflow-x:auto;padding:14px;background:#f2f5f7;border-radius:8px;font-size:13px}
+    button{font:inherit;font-size:14px;padding:8px 13px;border:1px solid var(--line);border-radius:8px;background:white;color:var(--ink);cursor:pointer}button:hover{background:var(--accent-bg)}
+    .skip{position:absolute;left:15px;top:-70px;background:white;padding:10px;z-index:9}.skip:focus{top:10px}
+    .layout{display:grid;grid-template-columns:205px minmax(0,1080px);gap:28px;max-width:1380px;margin:auto;padding:28px 26px 60px}
+    aside{position:sticky;top:24px;align-self:start;max-height:calc(100vh - 48px);overflow-y:auto;font-size:14px}
+    .brand{font-weight:750;font-size:19px;color:var(--accent)}.meta{color:var(--muted);font-size:13px}.side-note{border-top:1px solid var(--line);padding-top:15px;margin-top:20px;font-size:12px;color:var(--muted)}
+    nav{margin-top:16px}nav a{display:block;padding:7px 10px;border-left:2px solid transparent;text-decoration:none;color:var(--muted)}nav a:hover,nav a.active{border-color:var(--accent);background:#e6efed;color:var(--accent)}
+    main{min-width:0}.hero,.overview,.step,.conclusions{background:white;border:1px solid var(--line);border-radius:13px;margin-bottom:20px;overflow:hidden}
+    .hero{padding:28px 30px;background:linear-gradient(120deg,#fff 55%,#eef7f4)}.eyebrow{font-size:12px;letter-spacing:.12em;font-weight:700;color:var(--accent)}.lead{font-size:18px;color:#395461}
+    .badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.badge{display:inline-block;font-size:12px;line-height:1.6;border-radius:5px;padding:4px 9px;background:#eef2f4;color:var(--muted)}.good{background:var(--accent-bg);color:var(--accent)}.measured{background:var(--blue-bg);color:var(--blue)}.warn{background:var(--amber-bg);color:var(--amber)}
+    .toolbar{display:flex;gap:9px;flex-wrap:wrap;margin:0 0 20px}.js-only{display:none}.js .js-only{display:inline-block}
+    .overview,.conclusions{padding:23px 26px}.overview h2,.conclusions h2{margin-bottom:14px}
+    .flow{display:grid;gap:10px}.flow-node{border:1px solid var(--line);border-radius:9px;background:#f4f7f8;padding:12px 16px}.flow-node small{display:block;font-size:13px;color:var(--muted)}.flow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px}.flow-arrow{text-align:center;color:var(--muted);font-size:14px}.branch{border:1px solid #bcd7d1;background:var(--accent-bg);border-radius:10px;padding:15px}
+    .step-head{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:18px 23px;border-bottom:1px solid #edf1f3}.step-head h2{flex:1;min-width:180px;font-size:22px}.step-no{display:grid;place-items:center;min-width:37px;height:37px;border-radius:9px;background:#edf3f4;color:var(--accent);font-weight:700;font-size:15px}
+    .step-grid{display:grid;grid-template-columns:.9fr 1.1fr 1fr;gap:23px;padding:22px 23px;font-size:16px}.step-grid>div{min-width:0}.step-grid h3{font-size:13px;letter-spacing:.02em}.step-grid>div:last-child h3{color:var(--accent)}
+    .takeaway{margin:0 23px 18px;padding:11px 15px;background:var(--accent-bg);border-left:3px solid #6aab99;color:#315b50;font-size:15px}.takeaway.caution{background:var(--amber-bg);border-color:#c9a257;color:#79551b}
+    .table-wrap{overflow-x:auto;margin:0 23px 20px}table{width:100%;border-collapse:collapse;font-size:14px;line-height:1.7;text-align:left}th,td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}th{background:#f2f5f7;color:#49616e;font-weight:650}caption{text-align:left;font-size:13px;color:var(--muted);margin-bottom:8px}.nowrap{white-space:nowrap;font-variant-numeric:tabular-nums}
+    figure{margin:0 23px 20px;padding:13px;border:1px solid var(--line);border-radius:9px}figure img{display:block;width:100%;height:auto;max-height:720px;object-fit:contain}.js figure img{cursor:zoom-in}figcaption{margin-top:10px;font-size:14px;color:var(--muted);line-height:1.75}
+    details{border-top:1px solid #e8eef0}summary{padding:13px 23px;font-size:14px;color:var(--blue);font-weight:600;cursor:pointer}summary:hover{background:#f7fafb}.detail-body{padding:0 23px 20px;font-size:15px}.detail-body .table-wrap,.detail-body figure{margin:12px 0}.detail-body p{margin-top:9px}
+    .sources{display:flex;gap:7px 18px;flex-wrap:wrap;font-size:12px;border-top:1px dashed var(--line);padding-top:11px;margin-top:12px}.sources a{text-decoration:none}.sources a::before{content:"↗ ";color:#81949c}
+    .conclusion-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.conclusion-box{padding:16px 18px;border:1px solid var(--line);background:#f4f8f7;border-radius:8px}.conclusion-box.caution{background:var(--amber-bg)}.conclusion-box ul{padding-left:20px;margin:8px 0 0}.conclusion-box li+li{margin-top:6px}
+    .small{font-size:13px;color:var(--muted)}.mobile-toc{display:none}footer{font-size:12px;line-height:1.9;color:var(--muted);padding:2px}
+    dialog{max-width:96vw;max-height:94vh;width:max-content;border:1px solid var(--line);border-radius:11px;padding:14px;background:white}dialog::backdrop{background:#12232bd9}.zoom-tools{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;font-size:13px}.zoom-viewport{overflow:auto;max-height:78vh;max-width:91vw}#zoom-image{display:block;max-width:100%;height:auto}dialog.full-size #zoom-image{max-width:none}.zoom-caption{font-size:13px;max-width:900px;margin-top:10px;color:var(--muted)}
+    @media(max-width:1100px){.layout{grid-template-columns:170px minmax(0,1fr);gap:20px;padding:22px 18px}.step-grid{gap:17px;font-size:15px}.step-head h2{font-size:20px}}
+    @media(max-width:900px){.layout{display:block;max-width:850px;padding:18px}aside{display:none}.mobile-toc{display:block;background:white;border:1px solid var(--line);border-radius:9px;margin-bottom:20px}.mobile-toc nav{margin:0 12px 12px;font-size:14px}}
+    @media(max-width:650px){body{font-size:16px}.layout{padding:12px}.hero,.overview,.conclusions{padding:20px}.lead{font-size:16px}.step-grid,.conclusion-grid{grid-template-columns:1fr}.step-grid{font-size:16px;padding:18px;gap:18px}.step-head{padding:16px 18px}.step-head h2{font-size:20px}.step-head .badge{margin-left:49px}.takeaway,.table-wrap,figure{margin-left:18px;margin-right:18px}.detail-body{padding:0 18px 18px}summary{padding:12px 18px}th,td{padding:8px 10px}.zoom-tools{flex-wrap:wrap}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+    @media print{
+      @page{size:A4;margin:14mm}html{scroll-behavior:auto}body{background:white;font-size:10pt;line-height:1.65;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+      .layout{display:block;max-width:none;padding:0}aside,.toolbar,.mobile-toc,.skip,dialog{display:none!important}.hero{padding:18px}h1{font-size:24pt}.lead{font-size:11pt}.overview,.conclusions{padding:16px}
+      .step-head{padding:13px 15px;break-after:avoid}.step-head h2{font-size:14pt}.step-grid{font-size:10pt;gap:15px;padding:15px}.step-grid,.flow-node,.branch,.takeaway,.conclusion-box,tr{break-inside:avoid}.detail-body{font-size:9.5pt}table,summary{font-size:9pt}th,td{padding:7px 9px}figure{break-inside:avoid}figure img{max-height:170mm}figcaption{font-size:9pt}.sources,footer{font-size:8pt}h2,h3{break-after:avoid}
+    }
+  </style>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<div class="layout">
+  <aside aria-label="步骤目录">
+    <div class="brand">{{UNIT}}</div><p class="meta">分析流程与结果解读</p>
+    <nav id="toc" aria-label="分析导航"><a href="#overview">流程总览</a></nav>
+    <p class="side-note">先理解要解决的问题，再看方法和证据。关键结果随步骤展示，补充细节可展开。</p>
+  </aside>
+  <main id="main">
+    <header class="hero">
+      <div class="eyebrow">ANALYSIS PIPELINE</div>
+      <h1>{{TITLE}}</h1>
+      <div class="badges"><span class="badge good">{{MODE}}</span><span class="badge">整理日期：{{DATE}}</span></div>
+      {{INTRO}}
+    </header>
+    <div class="toolbar">
+      <button class="js-only" id="expand" type="button">展开补充细节</button>
+      <button class="js-only" id="collapse" type="button">收起补充细节</button>
+      <button class="js-only" id="print" type="button">打印 / 保存 PDF</button>
+    </div>
+    <details class="mobile-toc"><summary>按步骤跳转</summary><nav id="mobile-nav" aria-label="移动端分析导航"><a href="#overview">流程总览</a></nav></details>
+    <section class="overview" id="overview" aria-labelledby="overview-title">
+      <h2 id="overview-title">从输入到结论的流程</h2>
+      {{OVERVIEW}}
+    </section>
+    <!-- 步骤结构示例；复制到 STEPS 区域并按实际证据填写，删除不需要的部分。
+    <section class="step" id="step-unique-id" data-origin="所属单元">
+      <div class="step-head"><span class="step-no">01</span><h2>围绕实际问题命名</h2><span class="badge measured">实际来源或状态</span></div>
+      <div class="step-grid">
+        <div><h3>背景与为什么做</h3><p>说明问题及这一步的目的。</p></div>
+        <div><h3>方法与关键参数</h3><p>说明实际输入、方法直觉与关键参数。</p></div>
+        <div><h3>结果与如何解读</h3><p>给出可追溯观察、关键数字及解读。</p></div>
+      </div>
+      <p class="takeaway">影响主要判断的结论或限制；按需要保留。</p>
+      <figure><img src="relative/actual_figure.png" alt="描述实际图形内容"><figcaption>解释读图方式、主要观察、解读及来源。</figcaption></figure>
+      <details><summary>方法细节与原始证据</summary><div class="detail-body"><p>实际细节。</p><div class="sources"><a href="relative/actual_result.tsv">源结果表及比较范围</a></div></div></details>
+    </section>
+    -->
+    {{STEPS}}
+    <section class="conclusions" id="conclusions" aria-labelledby="conclusions-title">
+      <h2 id="conclusions-title">结论与证据边界</h2>
+      {{CONCLUSIONS}}
+    </section>
+    <footer><p>核心文字、图表、样式与交互均包含在本文件中，可独立离线阅读。原始证据链接用于回查，访问本地源文件仍需原项目目录；未核实或缺失的证据在对应步骤中注明。打印时展开补充内容。</p></footer>
+  </main>
+</div>
+<dialog id="figure-dialog" aria-label="查看原尺寸图表">
+  <div class="zoom-tools"><span>查看图表</span><div><button id="zoom-size" type="button">原始尺寸</button> <button id="zoom-close" type="button">关闭</button></div></div>
+  <div class="zoom-viewport"><img id="zoom-image" data-dynamic-image="true" alt="放大的结果图"></div>
+  <p class="zoom-caption" id="zoom-caption"></p>
+</dialog>
+<script>
+  document.documentElement.classList.add('js');
+  const details = [...document.querySelectorAll('main .step details, main .conclusions details')];
+  const navs = [document.getElementById('toc'), document.getElementById('mobile-nav')];
+  document.querySelectorAll('.step').forEach((step, i) => {
+    const heading = step.querySelector('h2');
+    if (!heading || !step.id) return;
+    navs.forEach(nav => {const a = document.createElement('a'); a.href = '#' + step.id; a.textContent = String(i + 1).padStart(2, '0') + ' · ' + heading.textContent; nav.append(a);});
+  });
+  navs.forEach(nav => {const a = document.createElement('a'); a.href = '#conclusions'; a.textContent = '结论与证据边界'; nav.append(a);});
+  document.getElementById('expand').addEventListener('click', () => details.forEach(d => d.open = true));
+  document.getElementById('collapse').addEventListener('click', () => details.forEach(d => d.open = false));
+  let printState = null;
+  function preparePrint() {if (printState === null) printState = details.map(d => d.open); details.forEach(d => d.open = true); document.querySelectorAll('figure img').forEach(img => img.loading = 'eager');}
+  window.addEventListener('beforeprint', preparePrint);
+  window.addEventListener('afterprint', () => {if (printState) details.forEach((d, i) => d.open = printState[i]); printState = null;});
+  document.getElementById('print').addEventListener('click', async () => {
+    preparePrint();
+    await Promise.all([...document.querySelectorAll('figure img')].map(img => {img.loading = 'eager'; return img.decode().catch(() => {});}));
+    await document.fonts.ready;
+    window.print();
+  });
+  const dialog = document.getElementById('figure-dialog');
+  const zoomImage = document.getElementById('zoom-image');
+  const sizeButton = document.getElementById('zoom-size');
+  document.querySelectorAll('figure img').forEach(img => {
+    img.tabIndex = 0; img.setAttribute('role', 'button'); img.setAttribute('aria-label', '放大：' + img.alt);
+    const open = event => {event?.preventDefault(); zoomImage.src = img.src; zoomImage.alt = img.alt; document.getElementById('zoom-caption').textContent = img.closest('figure').querySelector('figcaption')?.textContent || ''; dialog.classList.remove('full-size'); sizeButton.textContent = '原始尺寸'; dialog.showModal();};
+    img.addEventListener('click', open);
+    img.addEventListener('keydown', event => {if (event.key === 'Enter' || event.key === ' ') {event.preventDefault(); open();}});
+  });
+  sizeButton.addEventListener('click', () => {const full = dialog.classList.toggle('full-size'); sizeButton.textContent = full ? '适应窗口' : '原始尺寸';});
+  document.getElementById('zoom-close').addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', event => {if (event.target === dialog) {const r = dialog.getBoundingClientRect(); if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) dialog.close();}});
+</script>
+</body>
+</html>
