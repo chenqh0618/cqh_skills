@@ -10,6 +10,7 @@
 | `clarify-report` | 生成通俗易读的 Markdown 报告，包含图表解读、证据链接和术语表。 | [SKILL.md](skills/clarify-report/SKILL.md) |
 | `report-ppt` | 生成正式 PPTX，包含图表解读、逐页讲稿、证据来源和成品检查。 | [SKILL.md](skills/report-ppt/SKILL.md) |
 | `analysis-pipeline-html` | 按步骤解释分析目的、方法与参数、结果和关键图表，生成离线单文件 HTML；默认展开本单元，可选完整上游流程。 | [SKILL.md](skills/analysis-pipeline-html/SKILL.md) |
+| `scrna-integration-delivery` | 仅用户指名时组织 scRNA 整合注释交付；内置人／小鼠肺上皮 subtype、state 与 marker 候选，按指定范围整理或补图。 | [SKILL.md](skills/scrna-integration-delivery/SKILL.md) |
 | `biomedical-paper-detail-reader` | 生物医学原始研究逐图精读，梳理研究框架、证据链和结论边界，交付独立 HTML。 | [SKILL.md](skills/biomedical-paper-detail-reader/SKILL.md) |
 | `biomedical-paper-mainline-reader` | 生物医学论文主线精读，聚焦关键证据，并提炼对肺损伤修复细胞动态与分子机制研究的可迁移启发，交付独立 HTML。 | [SKILL.md](skills/biomedical-paper-mainline-reader/SKILL.md) |
 | `biomedical-paper-story-reader-beginner` | 面向生物医学初学者，在故事线中补足背景、术语、实验读出和对照原理，加入概念框及读图路线，交付离线单文件 HTML。 | [SKILL.md](skills/biomedical-paper-story-reader-beginner/SKILL.md) |
@@ -63,10 +64,13 @@ $clarify-report 根据指定分析任务的结果目录生成中文 Markdown 报
 $report-ppt 根据指定分析任务的结果目录制作中文 PPTX，面向初级专业人员，汇报时长 15 分钟。
 $analysis-pipeline-html 为 E01 生成分析流程解读 HTML。
 $analysis-pipeline-html 使用模式 2，从项目原始数据到 E01 结论讲解完整流程。
+$scrna-integration-delivery 整理指定分析单元的整合注释结果，并补齐组成图。
 $biomedical-paper-mainline-reader 围绕关键证据解读论文，并提炼对肺损伤修复课题的启发。
 $biomedical-paper-story-reader-beginner 面向生物医学初学者解读这篇论文，先解释必要概念和实验原理，再带读关键图并生成离线 HTML。
 $codex-statusline 为 Codex 配置显示模型、剩余上下文、用量限制、目录名和 Git 分支的状态栏。
 ```
+
+`scrna-integration-delivery` 仅配置 Codex 用户级入口，关闭隐式调用；普通 scRNA 分析请求不会自动选用。详细目录、DotPlot 与组成规则在显式调用后按本次任务读取。
 
 Claude Code 使用对应的 `/project-init-loose`、`/clarify-report`、`/report-ppt`。调用报告 skill 时可指定任务范围、结果目录、读者或听众及详略要求；两个报告 skill 保留手动调用设置，`project-init-loose` 保留原有调用行为。
 
